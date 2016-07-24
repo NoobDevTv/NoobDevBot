@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,13 +14,24 @@ namespace NoobDevBot
 
         static void Main(string[] args)
         {
+            if (!File.Exists("key.txt"))
+            {
+                Console.WriteLine("Keyfile not Found /n Please pressed Key");
+                Console.ReadKey();
+                return;
+            }
+
             CommandManager.Initialize();
-            bot = new TelegramBotClient("232609616:AAGOJkDYQmSmUFhjToCt3JTtRnlWp3-TszE");
+
+            using (var reader = new StreamReader(File.OpenRead("key.txt")))
+                bot = new TelegramBotClient(reader.ReadLine());
+
+
 
             bot.OnMessage += (s, e) => CommandManager.Throw(e.Message.Text, e);
 
             bot.StartReceiving();
-            
+
             Console.ReadKey();
         }
     }
