@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoobDevBot(Stream)", "NoobD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoobDevBot", "NoobDevBot\NoobDevBot.csproj", "{8CD55321-6BE8-4958-864F-64749D0008A5}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "NoobBotDatabase", "NoobBotDatabase\NoobBotDatabase.sqlproj", "{5FB2B3C8-5B8C-451E-B762-E0AA9C589005}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,12 @@ Global
 		{8CD55321-6BE8-4958-864F-64749D0008A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CD55321-6BE8-4958-864F-64749D0008A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CD55321-6BE8-4958-864F-64749D0008A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FB2B3C8-5B8C-451E-B762-E0AA9C589005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FB2B3C8-5B8C-451E-B762-E0AA9C589005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FB2B3C8-5B8C-451E-B762-E0AA9C589005}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5FB2B3C8-5B8C-451E-B762-E0AA9C589005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FB2B3C8-5B8C-451E-B762-E0AA9C589005}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FB2B3C8-5B8C-451E-B762-E0AA9C589005}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

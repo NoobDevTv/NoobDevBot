@@ -10,7 +10,7 @@ namespace NoobDevBot
 {
     class Program
     {
-        static TelegramBotClient bot;
+        public static TelegramBotClient Bot;
 
         static void Main(string[] args)
         {
@@ -21,16 +21,17 @@ namespace NoobDevBot
                 return;
             }
 
-            CommandManager.Initialize();
+            CommandManager.Initialize(Bot);
+            DatabaseManager.Initialize();
 
             using (var reader = new StreamReader(File.OpenRead("key.txt")))
-                bot = new TelegramBotClient(reader.ReadLine());
+                Bot = new TelegramBotClient(reader.ReadLine());
+            
 
+            Bot.OnMessage += (s, e) => CommandManager.Throw(e.Message.Text.Split().FirstOrDefault(f => f.StartsWith("/")), e);
+            
 
-
-            bot.OnMessage += (s, e) => CommandManager.Throw(e.Message.Text, e);
-
-            bot.StartReceiving();
+            Bot.StartReceiving();
 
             Console.ReadKey();
         }
