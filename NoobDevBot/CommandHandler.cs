@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace NoobDevBot
 {
-    public class CommandHandler<Tin, Tout>
+    public class CommandHandler<TIn, TOut>
     {
-        private Dictionary<string, Func<Tin, Tout>> mainDictionary;
+        private Dictionary<string, Func<TIn, TOut>> mainDictionary;
         
         public CommandHandler()
         {
-            mainDictionary = new Dictionary<string, Func<Tin, Tout>>();
+            mainDictionary = new Dictionary<string, Func<TIn, TOut>>();
         }
 
-        public Func<Tin, Tout> this[string commandName]
+        public Func<TIn, TOut> this[string commandName]
         {
             get
             {
-                Func<Tin, Tout> value;
+                Func<TIn, TOut> value;
                 mainDictionary.TryGetValue(commandName, out value);
                 return value;
             }
@@ -33,7 +33,7 @@ namespace NoobDevBot
             }
         }
 
-        public Tout Throw(string commandName, Tin parameter) => mainDictionary[commandName](parameter);
+        public TOut Dispatch(string commandName, TIn parameter) => mainDictionary[commandName](parameter);
 
         public bool CommandExists(string commandName) => mainDictionary.ContainsKey(commandName);
     }

@@ -1,10 +1,13 @@
-﻿using System;
+﻿using NoobDevBot.Commands;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 
 namespace NoobDevBot
 {
@@ -12,26 +15,40 @@ namespace NoobDevBot
     {
         private static CommandHandler<MessageEventArgs, bool> commandHandler;
         private static TelegramBotClient telegramBot;
+        private static ConcurrentDictionary<User, Func<MessageEventArgs, bool>> commandDictionary;
 
         public static void Initialize(TelegramBotClient telegramBot)
         {
             commandHandler = new CommandHandler<MessageEventArgs, bool>();
+            commandDictionary = new ConcurrentDictionary<User, Func<MessageEventArgs, bool>>();
             CommandManager.telegramBot = telegramBot;
 
             commandHandler["/hello"] += (e) => hello(e);
-            commandHandler["/Hello"] += (e) => hello(e);
-            commandHandler["/nextStream"] += (e) => nextStream(e);
-            //commandHandler["/insertStream"] += (e) => insertStream(e);
+            commandHandler["/nextstream"] += (e) => nextStream(e);
+            commandHandler["/insertstream"] += (e) => insertStream(e);
             //commandHandler["/deleteStream"] += (e) => deleteStream(e);
- 
+
         }
-        
-        public static bool Throw(string commandName, MessageEventArgs e)
+
+        public static bool Dispatch(string commandName, MessageEventArgs e)
         {
+            commandName = commandName.ToLower();
+            Func<MessageEventArgs, bool> method;
+
+
+            if (commandDictionary.TryGetValue(e.Message.From, out method))
+                    return method(e);
+            
+
             if (commandHandler.CommandExists(commandName ?? ""))
-                return commandHandler.Throw(commandName, e);
+                return commandHandler.Dispatch(commandName, e);
 
             return false;
+        }
+
+        public static async Task<bool> DispatchAsync(string commandName, MessageEventArgs e)
+        {
+            return Dispatch(commandName, e);
         }
 
         private static bool deleteStream(MessageEventArgs e)
@@ -41,49 +58,16 @@ namespace NoobDevBot
 
         private static bool insertStream(MessageEventArgs e)
         {
-            if (!DatabaseManager.UserExists(e.Message.From.Id))
-                DatabaseManager.SaveNewUser(e.Message.From, false);
-            else
-            {
-              var user = DatabaseManager.GetUser(e.Message.From.Id);
 
-                if (!user.insertStreamAllowed.Value)
-                    return false;
-            }
+            var command = new InsertStreamCommand(telegramBot, e.Message.Chat.Id);
+            if (!command.NextFunction(e))
+                return false;
 
-            var array = e.Message.Text.Split(',');
+            command.FinishEvent += finishedCommand;
 
-            DateTime dt = new DateTime();
-            string title = "";
-
-            foreach (var parameter in array)
-            {
-                var tmp = parameter.Split('=');
-                var command = tmp[0];
-                var value = tmp[1];
-
-                switch (command)
-                {
-                    case "s":
-                        var dtArray = value.Split('.');
-                        dt = new DateTime(int.Parse(dtArray[2]),int.Parse(dtArray[1]), int.Parse(dtArray[0]));
-                        break;
-                    case "t":
-                        title = value;
-                        break;
-                    default:
-                        
-                        break;
-                }
-            }
-
-            DatabaseManager.InsertNewStream(e.Message.From.Id, dt, title);
-
-            DatabaseManager.Submit();
-
-            return true;
+            return commandDictionary.TryAdd(e.Message.From, command.NextFunction);
+                       
         }
-
         private static bool nextStream(MessageEventArgs e)
         {
             var stream = DatabaseManager.GetNextStream();
@@ -98,8 +82,17 @@ namespace NoobDevBot
 
         private static bool hello(MessageEventArgs e)
         {
-            Console.WriteLine($"{e.Message.From.Username ?? e.Message.From.FirstName ?? e.Message.Text}: {e.Message.Text}");
-            return true;
+            var command = new HelloCommand();
+
+            return command.NextFunction(e);
+        }
+
+        private static void finishedCommand(object sender, MessageEventArgs e)
+        {
+            Func<MessageEventArgs, bool> method;
+
+            commandDictionary.TryRemove(e.Message.From, out method);
+            
         }
     }
 }

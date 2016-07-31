@@ -20,15 +20,15 @@ namespace NoobDevBot
                 Console.ReadKey();
                 return;
             }
-
-            CommandManager.Initialize(Bot);
+            
             DatabaseManager.Initialize();
 
-            using (var reader = new StreamReader(File.OpenRead("key.txt")))
+            using (var reader = new StreamReader("key.txt"))
                 Bot = new TelegramBotClient(reader.ReadLine());
-            
 
-            Bot.OnMessage += (s, e) => CommandManager.Throw(e.Message.Text.Split().FirstOrDefault(f => f.StartsWith("/")), e);
+            CommandManager.Initialize(Bot);
+
+            Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(e.Message.Text.Split().FirstOrDefault(f => f.StartsWith("/")), e);
             
 
             Bot.StartReceiving();
