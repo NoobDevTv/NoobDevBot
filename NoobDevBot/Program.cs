@@ -27,9 +27,8 @@ namespace NoobDevBot
                 Bot = new TelegramBotClient(reader.ReadLine());
 
             CommandManager.Initialize(Bot);
-
-            Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(e.Message.Text.Split().FirstOrDefault(f => f.StartsWith("/")), e);
             
+            Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(e.Message.Text.Split().FirstOrDefault(f => f.StartsWith("/")), e);
 
             Bot.StartReceiving();
 

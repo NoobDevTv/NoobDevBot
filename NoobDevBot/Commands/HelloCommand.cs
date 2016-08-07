@@ -16,8 +16,11 @@ namespace NoobDevBot.Commands
             NextFunction = WriteHello;
         }
 
-        public bool WriteHello(MessageEventArgs e) {
-            Console.WriteLine($"{e.Message.From.Username ?? e.Message.From.FirstName ?? e.Message.Text}: {e.Message.Text}");
+        public bool WriteHello(MessageEventArgs e)
+        {
+            Console.WriteLine($"{e.Message.From.Username ?? e.Message.From.FirstName}: {e.Message.Text}");
+            NextFunction = null;
+            RaiseFinishEvent(this, e);
             return true;
         }
     }

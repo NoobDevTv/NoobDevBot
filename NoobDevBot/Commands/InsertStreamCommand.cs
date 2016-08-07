@@ -37,8 +37,11 @@ namespace NoobDevBot.Commands
             }
 
             var user = DatabaseManager.GetUser(e.Message.From.Id);
-            if (!user.insertStreamAllowed.Value)
+            if (!user.streamer.Value)
+            {
+                AskUser($"Tut mir leid {e.Message.From.FirstName} du hast leider nicht genügend Rechte");
                 return false;
+            }
 
             userId = user.id;
 
@@ -79,6 +82,8 @@ namespace NoobDevBot.Commands
         {
             DatabaseManager.InsertNewStream(userId, date, streamTitle);
             DatabaseManager.Submit();
+
+            AskUser("Dein Stream wurde erfolgreich eingetragen.");
 
             RaiseFinishEvent(this, e);
         }

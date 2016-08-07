@@ -19,7 +19,7 @@ namespace NoobDevBot
 
         public static bool UserExists(int id) => context.GetTable<user>().Any(u => u.id == id);
 
-        public static void SaveNewUser(User user, bool streamInsertAllowed)
+        public static void SaveNewUser(User user, bool streamer)
         {
             var table = context.GetTable<user>();
 
@@ -27,7 +27,7 @@ namespace NoobDevBot
             {
                 id = user.Id,
                 name = string.IsNullOrWhiteSpace(user.Username) ? user.FirstName : user.Username,
-                insertStreamAllowed = streamInsertAllowed
+                streamer = streamer
             };
 
             table.InsertOnSubmit(tempUser);
@@ -50,8 +50,10 @@ namespace NoobDevBot
         public static streams GetNextStream()
         {
             var table = context.GetTable<streams>();
-            return table.Where(s => s.start > DateTime.UtcNow).OrderBy(s => s.start).First();
+            return table.Where(s => s.start > DateTime.UtcNow).OrderBy(s => s.start).FirstOrDefault();
         }
+
+        public static List<streams> GetUserStreams(int id) => GetUser(id).streams.ToList();
 
         public static user GetUser(int id) => context.GetTable<user>().First(u => u.id == id);
 

@@ -2,23 +2,23 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="NoobBotDatabase">
   <DataContextMoniker Name="/NoobBotDatabaseDataContext" />
   <nestedChildShapes>
-    <classShape Id="5bc37cf4-2155-4660-be68-b3fb50294a4e" absoluteBounds="3.5, 0.875, 2, 1.7708968098958331">
-      <DataClassMoniker Name="/NoobBotDatabaseDataContext/streams" />
-      <nestedChildShapes>
-        <elementListCompartment Id="a5e0136a-0b0c-4bbb-9d18-581b5d5ba689" absoluteBounds="3.515, 1.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="9da4c073-ce59-4980-95bd-872b181d1205" absoluteBounds="0.75, 1.125, 2, 1.3862939453125">
+    <classShape Id="094cba63-c322-4a5f-8661-205efef46840" absoluteBounds="0.75, 1.125, 2, 1.3862939453125">
       <DataClassMoniker Name="/NoobBotDatabaseDataContext/user" />
       <nestedChildShapes>
-        <elementListCompartment Id="5a58b47f-2bbb-45a7-b7cc-8d39217c983f" absoluteBounds="0.765, 1.585, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="64e4266f-af34-4ac3-918c-7477b0a84ae6" absoluteBounds="0.765, 1.585, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="7808a74f-b0fc-4abb-94aa-c8c41697464b" absoluteBounds="3.5, 0.875, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/NoobBotDatabaseDataContext/streams" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5a3b3f7a-c3ad-4691-8da3-820d6224cb01" absoluteBounds="3.515, 1.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <associationConnector edgePoints="[(2.75 : 1.81814697265625); (3.5 : 1.81814697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/NoobBotDatabaseDataContext/user/user_streams" />
       <nodes>
-        <classShapeMoniker Id="9da4c073-ce59-4980-95bd-872b181d1205" />
-        <classShapeMoniker Id="5bc37cf4-2155-4660-be68-b3fb50294a4e" />
+        <classShapeMoniker Id="094cba63-c322-4a5f-8661-205efef46840" />
+        <classShapeMoniker Id="7808a74f-b0fc-4abb-94aa-c8c41697464b" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>
