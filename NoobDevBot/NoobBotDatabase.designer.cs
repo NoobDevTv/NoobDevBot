@@ -30,12 +30,12 @@ namespace NoobDevBot
 		
     #region Definitionen der Erweiterungsmethoden
     partial void OnCreated();
-    partial void Insertuser(user instance);
-    partial void Updateuser(user instance);
-    partial void Deleteuser(user instance);
     partial void Insertstreams(streams instance);
     partial void Updatestreams(streams instance);
     partial void Deletestreams(streams instance);
+    partial void Insertuser(user instance);
+    partial void Updateuser(user instance);
+    partial void Deleteuser(user instance);
     #endregion
 		
 		public NoobBotDatabaseDataContext() : 
@@ -68,14 +68,6 @@ namespace NoobDevBot
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<user> user
-		{
-			get
-			{
-				return this.GetTable<user>();
-			}
-		}
-		
 		public System.Data.Linq.Table<streams> streams
 		{
 			get
@@ -83,143 +75,13 @@ namespace NoobDevBot
 				return this.GetTable<streams>();
 			}
 		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[user]")]
-	public partial class user : INotifyPropertyChanging, INotifyPropertyChanged
-	{
 		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private System.Nullable<bool> _streamer;
-		
-		private string _name;
-		
-		private EntitySet<streams> _streams;
-		
-    #region Definitionen der Erweiterungsmethoden
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void OnstreamerChanging(System.Nullable<bool> value);
-    partial void OnstreamerChanged();
-    partial void OnnameChanging(string value);
-    partial void OnnameChanged();
-    #endregion
-		
-		public user()
-		{
-			this._streams = new EntitySet<streams>(new Action<streams>(this.attach_streams), new Action<streams>(this.detach_streams));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int id
+		public System.Data.Linq.Table<user> user
 		{
 			get
 			{
-				return this._id;
+				return this.GetTable<user>();
 			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_streamer", DbType="Bit")]
-		public System.Nullable<bool> streamer
-		{
-			get
-			{
-				return this._streamer;
-			}
-			set
-			{
-				if ((this._streamer != value))
-				{
-					this.OnstreamerChanging(value);
-					this.SendPropertyChanging();
-					this._streamer = value;
-					this.SendPropertyChanged("streamer");
-					this.OnstreamerChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string name
-		{
-			get
-			{
-				return this._name;
-			}
-			set
-			{
-				if ((this._name != value))
-				{
-					this.OnnameChanging(value);
-					this.SendPropertyChanging();
-					this._name = value;
-					this.SendPropertyChanged("name");
-					this.OnnameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="user_streams", Storage="_streams", ThisKey="id", OtherKey="userId")]
-		public EntitySet<streams> streams
-		{
-			get
-			{
-				return this._streams;
-			}
-			set
-			{
-				this._streams.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_streams(streams entity)
-		{
-			this.SendPropertyChanging();
-			entity.user = this;
-		}
-		
-		private void detach_streams(streams entity)
-		{
-			this.SendPropertyChanging();
-			entity.user = null;
 		}
 	}
 	
@@ -419,6 +281,144 @@ namespace NoobDevBot
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[user]")]
+	public partial class user : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Nullable<bool> _streamer;
+		
+		private string _name;
+		
+		private EntitySet<streams> _streams;
+		
+    #region Definitionen der Erweiterungsmethoden
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnstreamerChanging(System.Nullable<bool> value);
+    partial void OnstreamerChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public user()
+		{
+			this._streams = new EntitySet<streams>(new Action<streams>(this.attach_streams), new Action<streams>(this.detach_streams));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_streamer", DbType="Bit")]
+		public System.Nullable<bool> streamer
+		{
+			get
+			{
+				return this._streamer;
+			}
+			set
+			{
+				if ((this._streamer != value))
+				{
+					this.OnstreamerChanging(value);
+					this.SendPropertyChanging();
+					this._streamer = value;
+					this.SendPropertyChanged("streamer");
+					this.OnstreamerChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="user_streams", Storage="_streams", ThisKey="id", OtherKey="userId")]
+		public EntitySet<streams> streams
+		{
+			get
+			{
+				return this._streams;
+			}
+			set
+			{
+				this._streams.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_streams(streams entity)
+		{
+			this.SendPropertyChanging();
+			entity.user = this;
+		}
+		
+		private void detach_streams(streams entity)
+		{
+			this.SendPropertyChanging();
+			entity.user = null;
 		}
 	}
 }
