@@ -66,8 +66,7 @@ namespace NoobDevBot
             }
 
             var command = new DeleteStreamCommand(telegramBot, e.Message.Chat.Id);
-            if (!command.Dispatch(e))
-                return false;
+            
 
             command.FinishEvent += finishedCommand;
 
@@ -83,9 +82,7 @@ namespace NoobDevBot
             }
 
             var command = new InsertStreamCommand(telegramBot, e.Message.Chat.Id);
-            if (!command.Dispatch(e))
-                return false;
-
+            
             command.FinishEvent += finishedCommand;
 
             return commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
@@ -94,10 +91,7 @@ namespace NoobDevBot
         private static bool nextStream(MessageEventArgs e)
         {
             var command = new NextStreamCommand(telegramBot, e.Message.Chat.Id);
-            if (!command.Dispatch(e))
-                return false;
             
-
             return command.Dispatch(e);
         }
 
