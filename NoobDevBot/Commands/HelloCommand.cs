@@ -23,10 +23,11 @@ namespace NoobDevBot.Commands
 
         public bool WriteHello(MessageEventArgs e)
         {
-            Console.WriteLine($"{e.Message.From.Username ?? e.Message.From.FirstName}: {e.Message.Text}");
             telegramBotClient.SendTextMessageAsync(id, $"Hallo {e.Message.From.Username ?? e.Message.From.FirstName}");
+
             NextFunction = null;
             RaiseFinishEvent(this, e);
+            Finished = true;
             return true;
         }
     }

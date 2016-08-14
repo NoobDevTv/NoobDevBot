@@ -82,10 +82,13 @@ namespace NoobDevBot.Commands
         {
             DatabaseManager.InsertNewStream(userId, date, streamTitle);
             DatabaseManager.Submit();
+            DatabaseManager.GetNextStream();
 
             AskUser("Dein Stream wurde erfolgreich eingetragen.");
 
             RaiseFinishEvent(this, e);
+            NextFunction = null;
+            Finished = true;
         }
     }
 }
