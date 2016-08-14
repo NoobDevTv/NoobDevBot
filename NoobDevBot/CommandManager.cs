@@ -27,7 +27,6 @@ namespace NoobDevBot
             commandHandler["/hello"] += (e) => hello(e);
             commandHandler["/nextstream"] += (e) => nextStream(e);
             commandHandler["/insertstream"] += (e) => insertStream(e);
-            //commandHandler["/deleteStream"] += (e) => deleteStream(e);
 
         }
 
