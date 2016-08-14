@@ -17,7 +17,7 @@ namespace NoobDevBot
         private static CommandHandler<MessageEventArgs, bool> commandHandler;
         private static TelegramBotClient telegramBot;
         private static ConcurrentDictionary<long, Func<MessageEventArgs, bool>> commandDictionary;
-
+        
         public static void Initialize(TelegramBotClient telegramBot)
         {
             commandHandler = new CommandHandler<MessageEventArgs, bool>();
@@ -35,6 +35,7 @@ namespace NoobDevBot
         {
             if (commandName != null)
             {
+                Logger.Log($"User: {e.Message.From.Username ?? e.Message.From.FirstName} try to use {commandName}");
                 Console.WriteLine($"User: {e.Message.From.Username ?? e.Message.From.FirstName} try to use {commandName}");
                 commandName = commandName.ToLower();
 
@@ -103,7 +104,7 @@ namespace NoobDevBot
 
         private static bool hello(MessageEventArgs e)
         {
-            var command = new HelloCommand();
+            var command = new HelloCommand(telegramBot, e.Message.Chat.Id);
             
             return command.Dispatch(e);
         }

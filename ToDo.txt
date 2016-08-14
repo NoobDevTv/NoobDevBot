@@ -1,0 +1,4 @@
+Rightmanagement einfügen
+Command liste überarbeiten
+User beim Erstkontakt immer eintragen
+

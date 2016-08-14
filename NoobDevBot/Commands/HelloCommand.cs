@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Bot;
 using Telegram.Bot.Args;
 
 namespace NoobDevBot.Commands
@@ -11,16 +12,24 @@ namespace NoobDevBot.Commands
         : Command<MessageEventArgs, bool>
     {
 
-        public HelloCommand()
+        private TelegramBotClient telegramBotClient;
+        private long id;
+
+        public HelloCommand(TelegramBotClient telegramBot, long chatId)
         {
+            telegramBotClient = telegramBot;
+            id = chatId;
+
             NextFunction = WriteHello;
         }
 
         public bool WriteHello(MessageEventArgs e)
         {
-            Console.WriteLine($"{e.Message.From.Username ?? e.Message.From.FirstName}: {e.Message.Text}");
+            telegramBotClient.SendTextMessageAsync(id, $"Hallo {e.Message.From.Username ?? e.Message.From.FirstName}");
+
             NextFunction = null;
             RaiseFinishEvent(this, e);
+            Finished = true;
             return true;
         }
     }
