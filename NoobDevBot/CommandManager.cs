@@ -102,7 +102,7 @@ namespace NoobDevBot
 
         private static bool hello(MessageEventArgs e)
         {
-            var command = new HelloCommand();
+            var command = new HelloCommand(telegramBot, e.Message.Chat.Id);
             
             return command.Dispatch(e);
         }
