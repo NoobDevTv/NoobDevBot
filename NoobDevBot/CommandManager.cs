@@ -27,7 +27,6 @@ namespace NoobDevBot
             commandHandler["/hello"] += (e) => hello(e);
             commandHandler["/nextstream"] += (e) => nextStream(e);
             commandHandler["/insertstream"] += (e) => insertStream(e);
-            //commandHandler["/deleteStream"] += (e) => deleteStream(e);
 
         }
 
@@ -103,7 +102,7 @@ namespace NoobDevBot
 
         private static bool hello(MessageEventArgs e)
         {
-            var command = new HelloCommand();
+            var command = new HelloCommand(telegramBot, e.Message.Chat.Id);
             
             return command.Dispatch(e);
         }
