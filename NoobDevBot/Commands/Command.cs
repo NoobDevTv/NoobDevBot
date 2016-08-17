@@ -12,6 +12,8 @@ namespace NoobDevBot.Commands
     {
         public Func<TParameter, TOut> NextFunction { get; set; }
 
+        public bool Finished { get; protected set; }
+
         public TOut Dispatch(TParameter parameter) => NextFunction(parameter);
 
         public delegate void FinishEventHandler(object sender, TParameter e);

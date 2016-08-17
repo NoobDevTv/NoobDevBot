@@ -5,34 +5,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Types;
+using File = System.IO.File;
 
 namespace NoobDevBot
 {
     class Program
     {
+        
         public static TelegramBotClient Bot;
-
+        
         static void Main(string[] args)
         {
+
+            Logger.StartLog();
+
             if (!File.Exists("key.txt"))
             {
-                Console.WriteLine("Keyfile not Found /n Please pressed Key");
+                Logger.Log("Keyfile not Found /n Please pressed Key");
                 Console.ReadKey();
                 return;
             }
-            
+
             DatabaseManager.Initialize();
 
             using (var reader = new StreamReader("key.txt"))
                 Bot = new TelegramBotClient(reader.ReadLine());
 
             CommandManager.Initialize(Bot);
-            
-            Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(e.Message.Text.Split().FirstOrDefault(f => f.StartsWith("/")), e);
+
+            Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(commandFromMessage(e.Message), e);
 
             Bot.StartReceiving();
 
             Console.ReadKey();
+            Logger.EndLog();
+        }
+
+        static string commandFromMessage(Message message)
+        {
+            var command = message.Text.Split().FirstOrDefault(f => f.StartsWith("/"));
+            var splitcont = command.ToLower().Split('@');
+            
+            if (splitcont.Length > 1 && !splitcont.Any(s => s == "noobdev_bot" || s == "noobdevbot"))
+                return "null";
+            
+            return splitcont.FirstOrDefault();
         }
     }
 }

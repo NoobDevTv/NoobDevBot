@@ -12,30 +12,31 @@ namespace NoobDevBot.Commands
         : Command<MessageEventArgs, bool>
     {
         private long id;
+        private streams nextStream;
         private TelegramBotClient telegramBot;
 
         public NextStreamCommand(TelegramBotClient telegramBot, long id)
         {
             this.telegramBot = telegramBot;
             this.id = id;
+            nextStream = DatabaseManager.NextStream;
 
             NextFunction = SendNextStream;
         }
 
         private bool SendNextStream(MessageEventArgs e)
         {
-            var stream = DatabaseManager.GetNextStream();
-            
             string message;
 
-            if (stream != null)
-                message = $"Der Nächste Stream ist: {stream.title} am {stream.start} von {stream.user.name}";
+            if (nextStream != null)
+                message = $"Der Nächste Stream ist: {nextStream.title} am {nextStream.start} von {nextStream.user.name}";
             else
                 message = "Leider konnte ich keinen Stream finden :(";
             
             telegramBot.SendTextMessageAsync(id, message);
 
             NextFunction = null;
+            Finished = true;
             RaiseFinishEvent(this, e);
 
             return true;

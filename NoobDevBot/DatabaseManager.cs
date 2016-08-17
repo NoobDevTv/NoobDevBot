@@ -10,11 +10,14 @@ namespace NoobDevBot
 {
     public static class DatabaseManager
     {
-        static NoobBotDatabaseDataContext context;
+        public static streams NextStream { get; private set; }
+
+        private static NoobBotDatabaseDataContext context;
 
         public static void Initialize()
         {
             context = new NoobBotDatabaseDataContext();
+            GetNextStream();
         }
 
         public static bool UserExists(int id) => context.GetTable<user>().Any(u => u.id == id);
@@ -47,10 +50,21 @@ namespace NoobDevBot
             table.InsertOnSubmit(tempStream);
         }
 
-        public static streams GetNextStream()
+        public static void GetNextStream()
         {
-            var table = context.GetTable<streams>();
-            return table.Where(s => s.start > DateTime.UtcNow).OrderBy(s => s.start).FirstOrDefault();
+            Table<streams> table;
+            try
+            {
+                table = context.GetTable<streams>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Irgend so ein fehler");
+                Logger.Log(e.Message, 2);
+                return;
+            }
+
+            NextStream = table?.Where(s => s.start > DateTime.UtcNow)?.OrderBy(s => s.start)?.FirstOrDefault();
         }
 
         public static List<streams> GetUserStreams(int id) => GetUser(id).streams.ToList();
