@@ -112,6 +112,7 @@
   <ItemGroup>
     <Build Include="user.sql" />
     <Build Include="streams.sql" />
+    <Build Include="groups.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="NoobBotDatabase.refactorlog" />
