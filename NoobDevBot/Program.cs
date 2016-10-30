@@ -45,8 +45,12 @@ namespace NoobDevBot
         static string commandFromMessage(Message message)
         {
             var command = message.Text.Split().FirstOrDefault(f => f.StartsWith("/"));
-            var splitcont = command.ToLower().Split('@');
             
+            if (command == null)
+                return null;
+
+            var splitcont = command.ToLower().Split('@');
+
             if (splitcont.Length > 1 && !splitcont.Any(s => s == "noobdev_bot" || s == "noobdevbot"))
                 return "null";
             
