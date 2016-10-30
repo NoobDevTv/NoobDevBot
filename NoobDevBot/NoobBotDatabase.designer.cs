@@ -30,16 +30,19 @@ namespace NoobDevBot
 		
     #region Definitionen der Erweiterungsmethoden
     partial void OnCreated();
-    partial void Insertstreams(streams instance);
-    partial void Updatestreams(streams instance);
-    partial void Deletestreams(streams instance);
     partial void Insertuser(user instance);
     partial void Updateuser(user instance);
     partial void Deleteuser(user instance);
+    partial void Insertstreams(streams instance);
+    partial void Updatestreams(streams instance);
+    partial void Deletestreams(streams instance);
+    partial void Insertgroups(groups instance);
+    partial void Updategroups(groups instance);
+    partial void Deletegroups(groups instance);
     #endregion
 		
 		public NoobBotDatabaseDataContext() : 
-				base(global::NoobDevBot.Properties.Settings.Default.NoobBotDatabaseConnectionString, mappingSource)
+				base(global::NoobDevBot.Properties.Settings.Default.NoobBotDatabaseConnectionString1, mappingSource)
 		{
 			OnCreated();
 		}
@@ -68,6 +71,14 @@ namespace NoobDevBot
 			OnCreated();
 		}
 		
+		public System.Data.Linq.Table<user> user
+		{
+			get
+			{
+				return this.GetTable<user>();
+			}
+		}
+		
 		public System.Data.Linq.Table<streams> streams
 		{
 			get
@@ -76,12 +87,187 @@ namespace NoobDevBot
 			}
 		}
 		
-		public System.Data.Linq.Table<user> user
+		public System.Data.Linq.Table<groups> groups
 		{
 			get
 			{
-				return this.GetTable<user>();
+				return this.GetTable<groups>();
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[user]")]
+	public partial class user : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _group;
+		
+		private string _name;
+		
+		private EntitySet<streams> _streams;
+		
+		private EntityRef<groups> _groups;
+		
+    #region Definitionen der Erweiterungsmethoden
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OngroupChanging(int value);
+    partial void OngroupChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public user()
+		{
+			this._streams = new EntitySet<streams>(new Action<streams>(this.attach_streams), new Action<streams>(this.detach_streams));
+			this._groups = default(EntityRef<groups>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[group]", Storage="_group", DbType="Int NOT NULL")]
+		public int group
+		{
+			get
+			{
+				return this._group;
+			}
+			set
+			{
+				if ((this._group != value))
+				{
+					this.OngroupChanging(value);
+					this.SendPropertyChanging();
+					this._group = value;
+					this.SendPropertyChanged("group");
+					this.OngroupChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(MAX)")]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="user_streams", Storage="_streams", ThisKey="id", OtherKey="userId")]
+		public EntitySet<streams> streams
+		{
+			get
+			{
+				return this._streams;
+			}
+			set
+			{
+				this._streams.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="groups_user", Storage="_groups", ThisKey="group", OtherKey="id", IsForeignKey=true)]
+		public groups groups
+		{
+			get
+			{
+				return this._groups.Entity;
+			}
+			set
+			{
+				groups previousValue = this._groups.Entity;
+				if (((previousValue != value) 
+							|| (this._groups.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._groups.Entity = null;
+						previousValue.user.Remove(this);
+					}
+					this._groups.Entity = value;
+					if ((value != null))
+					{
+						value.user.Add(this);
+						this._group = value.id;
+					}
+					else
+					{
+						this._group = default(int);
+					}
+					this.SendPropertyChanged("groups");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_streams(streams entity)
+		{
+			this.SendPropertyChanging();
+			entity.user = this;
+		}
+		
+		private void detach_streams(streams entity)
+		{
+			this.SendPropertyChanging();
+			entity.user = null;
 		}
 	}
 	
@@ -189,7 +375,7 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_title", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_title", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
 		public string title
 		{
 			get
@@ -209,7 +395,7 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_url", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_url", DbType="VarChar(MAX)")]
 		public string url
 		{
 			get
@@ -284,19 +470,19 @@ namespace NoobDevBot
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[user]")]
-	public partial class user : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.groups")]
+	public partial class groups : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private int _id;
 		
-		private System.Nullable<bool> _streamer;
-		
 		private string _name;
 		
-		private EntitySet<streams> _streams;
+		private int _power;
+		
+		private EntitySet<user> _user;
 		
     #region Definitionen der Erweiterungsmethoden
     partial void OnLoaded();
@@ -304,19 +490,19 @@ namespace NoobDevBot
     partial void OnCreated();
     partial void OnidChanging(int value);
     partial void OnidChanged();
-    partial void OnstreamerChanging(System.Nullable<bool> value);
-    partial void OnstreamerChanged();
     partial void OnnameChanging(string value);
     partial void OnnameChanged();
+    partial void OnpowerChanging(int value);
+    partial void OnpowerChanged();
     #endregion
 		
-		public user()
+		public groups()
 		{
-			this._streams = new EntitySet<streams>(new Action<streams>(this.attach_streams), new Action<streams>(this.detach_streams));
+			this._user = new EntitySet<user>(new Action<user>(this.attach_user), new Action<user>(this.detach_user));
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int id
 		{
 			get
@@ -336,27 +522,7 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_streamer", DbType="Bit")]
-		public System.Nullable<bool> streamer
-		{
-			get
-			{
-				return this._streamer;
-			}
-			set
-			{
-				if ((this._streamer != value))
-				{
-					this.OnstreamerChanging(value);
-					this.SendPropertyChanging();
-					this._streamer = value;
-					this.SendPropertyChanged("streamer");
-					this.OnstreamerChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
 		public string name
 		{
 			get
@@ -376,16 +542,36 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="user_streams", Storage="_streams", ThisKey="id", OtherKey="userId")]
-		public EntitySet<streams> streams
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_power", DbType="Int NOT NULL")]
+		public int power
 		{
 			get
 			{
-				return this._streams;
+				return this._power;
 			}
 			set
 			{
-				this._streams.Assign(value);
+				if ((this._power != value))
+				{
+					this.OnpowerChanging(value);
+					this.SendPropertyChanging();
+					this._power = value;
+					this.SendPropertyChanged("power");
+					this.OnpowerChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="groups_user", Storage="_user", ThisKey="id", OtherKey="group")]
+		public EntitySet<user> user
+		{
+			get
+			{
+				return this._user;
+			}
+			set
+			{
+				this._user.Assign(value);
 			}
 		}
 		
@@ -409,16 +595,16 @@ namespace NoobDevBot
 			}
 		}
 		
-		private void attach_streams(streams entity)
+		private void attach_user(user entity)
 		{
 			this.SendPropertyChanging();
-			entity.user = this;
+			entity.groups = this;
 		}
 		
-		private void detach_streams(streams entity)
+		private void detach_user(user entity)
 		{
 			this.SendPropertyChanging();
-			entity.user = null;
+			entity.groups = null;
 		}
 	}
 }

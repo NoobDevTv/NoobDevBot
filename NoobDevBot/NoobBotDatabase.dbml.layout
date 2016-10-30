@@ -2,23 +2,36 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="NoobBotDatabase">
   <DataContextMoniker Name="/NoobBotDatabaseDataContext" />
   <nestedChildShapes>
-    <classShape Id="ee7aec5d-5232-4780-ac37-e6ec5e70b446" absoluteBounds="3.5, 0.875, 2, 1.7708968098958331">
-      <DataClassMoniker Name="/NoobBotDatabaseDataContext/streams" />
-      <nestedChildShapes>
-        <elementListCompartment Id="b8e6efd4-0658-40e5-8210-55b447651696" absoluteBounds="3.515, 1.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="e1221f0d-838a-4279-8338-9f712b885c0c" absoluteBounds="0.75, 1.125, 2, 1.3862939453125">
+    <classShape Id="39e72640-1cf8-4a6d-b58d-f078bf116e4f" absoluteBounds="3.5, 1.125, 2, 1.3862939453125">
       <DataClassMoniker Name="/NoobBotDatabaseDataContext/user" />
       <nestedChildShapes>
-        <elementListCompartment Id="225d2732-8ed2-4d56-8650-764d7205831d" absoluteBounds="0.765, 1.585, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="b82ff8ce-baad-4217-aa80-7895cfab22ef" absoluteBounds="3.515, 1.585, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.75 : 1.81814697265625); (3.5 : 1.81814697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <classShape Id="f5f53b9d-1bf0-49b2-9bfb-86f43ad14f09" absoluteBounds="6.25, 0.875, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/NoobBotDatabaseDataContext/streams" />
+      <nestedChildShapes>
+        <elementListCompartment Id="fa2ca00e-1858-4cc8-b789-ad9e5db1f143" absoluteBounds="6.265, 1.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="de463141-61f7-4f20-9755-05dc5167f6c9" absoluteBounds="0.75, 1.125, 2, 1.3862939453125">
+      <DataClassMoniker Name="/NoobBotDatabaseDataContext/groups" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b2ad01c8-bd5d-451e-892e-9a9653698a79" absoluteBounds="0.765, 1.585, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.5 : 1.81814697265625); (6.25 : 1.81814697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/NoobBotDatabaseDataContext/user/user_streams" />
       <nodes>
-        <classShapeMoniker Id="e1221f0d-838a-4279-8338-9f712b885c0c" />
-        <classShapeMoniker Id="ee7aec5d-5232-4780-ac37-e6ec5e70b446" />
+        <classShapeMoniker Id="39e72640-1cf8-4a6d-b58d-f078bf116e4f" />
+        <classShapeMoniker Id="f5f53b9d-1bf0-49b2-9bfb-86f43ad14f09" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 1.81814697265625); (3.5 : 1.81814697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NoobBotDatabaseDataContext/groups/groups_user" />
+      <nodes>
+        <classShapeMoniker Id="de463141-61f7-4f20-9755-05dc5167f6c9" />
+        <classShapeMoniker Id="39e72640-1cf8-4a6d-b58d-f078bf116e4f" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>

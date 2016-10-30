@@ -22,7 +22,7 @@ namespace NoobDevBot
 
         public static bool UserExists(int id) => context.GetTable<user>().Any(u => u.id == id);
 
-        public static void SaveNewUser(User user, bool streamer)
+        public static void SaveNewUser(User user)
         {
             var table = context.GetTable<user>();
 
@@ -30,7 +30,6 @@ namespace NoobDevBot
             {
                 id = user.Id,
                 name = string.IsNullOrWhiteSpace(user.Username) ? user.FirstName : user.Username,
-                streamer = streamer
             };
 
             table.InsertOnSubmit(tempUser);

@@ -1,21 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NoobBotDatabase" Class="NoobBotDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=HAL2015;Initial Catalog=NoobBotDatabase;Integrated Security=True;Encrypt=False;TrustServerCertificate=True" SettingsObjectName="NoobDevBot.Properties.Settings" SettingsPropertyName="NoobBotDatabaseConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=HAL2015;Initial Catalog=NoobBotDatabase;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True" SettingsObjectName="NoobDevBot.Properties.Settings" SettingsPropertyName="NoobBotDatabaseConnectionString1" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.[user]" Member="user">
+    <Type Name="user">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="[group]" Member="group" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Association Name="user_streams" Member="streams" ThisKey="id" OtherKey="userId" Type="streams" />
+      <Association Name="groups_user" Member="groups" ThisKey="group" OtherKey="id" Type="groups" IsForeignKey="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.streams" Member="streams">
     <Type Name="streams">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="userId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="start" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="title" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="url" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="title" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Association Name="user_streams" Member="user" ThisKey="userId" OtherKey="id" Type="user" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.[user]" Member="user">
-    <Type Name="user">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="streamer" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="name" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
-      <Association Name="user_streams" Member="streams" ThisKey="id" OtherKey="userId" Type="streams" />
+  <Table Name="dbo.groups" Member="groups">
+    <Type Name="groups">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="power" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="groups_user" Member="user" ThisKey="id" OtherKey="group" Type="user" />
     </Type>
   </Table>
 </Database>

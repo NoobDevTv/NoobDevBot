@@ -18,7 +18,7 @@ namespace NoobDevBot.Commands
         private int userId;
         private string streamTitle;
         private DateTime date;
-        
+
         public InsertStreamCommand(TelegramBotClient telegramBot, long chatId)
         {
             NextFunction = CheckOrInsertUser;
@@ -30,14 +30,14 @@ namespace NoobDevBot.Commands
         {
             if (!DatabaseManager.UserExists(e.Message.From.Id))
             {
-                DatabaseManager.SaveNewUser(e.Message.From, false);
+                DatabaseManager.SaveNewUser(e.Message.From);
                 DatabaseManager.Submit();
 
                 return false;
             }
 
             var user = DatabaseManager.GetUser(e.Message.From.Id);
-            if (!user.streamer.Value)
+            if (user.groups.power < 100)
             {
                 AskUser($"Tut mir leid {e.Message.From.FirstName} du hast leider nicht genügend Rechte");
                 return false;
@@ -73,7 +73,7 @@ namespace NoobDevBot.Commands
                 NextFunction = null;
                 return true;
             }
-                
+
 
             return false;
         }
