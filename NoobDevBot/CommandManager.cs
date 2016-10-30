@@ -17,7 +17,7 @@ namespace NoobDevBot
         private static CommandHandler<MessageEventArgs, bool> commandHandler;
         private static TelegramBotClient telegramBot;
         private static ConcurrentDictionary<long, Func<MessageEventArgs, bool>> commandDictionary;
-        
+
         public static void Initialize(TelegramBotClient telegramBot)
         {
             commandHandler = new CommandHandler<MessageEventArgs, bool>();
@@ -66,12 +66,12 @@ namespace NoobDevBot
             }
 
             var command = new DeleteStreamCommand(telegramBot, e.Message.Chat.Id);
-            
+
 
             command.FinishEvent += finishedCommand;
 
             return commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
-                }
+        }
 
         private static bool insertStream(MessageEventArgs e)
         {
@@ -82,8 +82,10 @@ namespace NoobDevBot
             }
 
             var command = new InsertStreamCommand(telegramBot, e.Message.Chat.Id);
-            
+
             command.FinishEvent += finishedCommand;
+
+            command.NextFunction(e);
 
             return commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
 
@@ -91,14 +93,14 @@ namespace NoobDevBot
         private static bool nextStream(MessageEventArgs e)
         {
             var command = new NextStreamCommand(telegramBot, e.Message.Chat.Id);
-            
+
             return command.Dispatch(e);
         }
 
         private static bool hello(MessageEventArgs e)
         {
             var command = new HelloCommand(telegramBot, e.Message.Chat.Id);
-            
+
             return command.Dispatch(e);
         }
 
