@@ -1,20 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NoobBotDatabase" Class="NoobBotDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=HAL2015;Initial Catalog=NoobBotDatabase;Integrated Security=True;Encrypt=False;TrustServerCertificate=True" SettingsObjectName="NoobDevBot.Properties.Settings" SettingsPropertyName="NoobBotDatabaseConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=HAL2015;Initial Catalog=NoobBotDatabase;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True" SettingsObjectName="NoobDevBot.Properties.Settings" SettingsPropertyName="NoobBotDatabaseConnectionString1" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.groups" Member="groups">
+    <Type Name="groups">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Association Name="groups_groups_relation" Member="groups_relation" ThisKey="id" OtherKey="group_id" Type="groups_relation" />
+    </Type>
+  </Table>
+  <Table Name="dbo.groups_relation" Member="groups_relation">
+    <Type Name="groups_relation">
+      <Column Name="user_id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="group_id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="groups_groups_relation" Member="groups" ThisKey="group_id" OtherKey="id" Type="groups" IsForeignKey="true" />
+      <Association Name="user_groups_relation" Member="user" ThisKey="user_id" OtherKey="id" Type="user" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.rights_relation" Member="rights_relation">
+    <Type Name="rights_relation">
+      <Column Name="is_group" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="reference" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="right_id" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="power" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.smilies" Member="smilies">
+    <Type Name="smilies">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="unicode" Type="System.String" DbType="NVarChar(1) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
   <Table Name="dbo.streams" Member="streams">
     <Type Name="streams">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="userId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="start" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="title" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="url" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="title" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Association Name="user_streams" Member="user" ThisKey="userId" OtherKey="id" Type="user" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.[user]" Member="user">
     <Type Name="user">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="streamer" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="name" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="name" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Association Name="user_groups_relation" Member="groups_relation" ThisKey="id" OtherKey="user_id" Type="groups_relation" />
       <Association Name="user_streams" Member="streams" ThisKey="id" OtherKey="userId" Type="streams" />
     </Type>
   </Table>
