@@ -28,16 +28,9 @@ namespace NoobDevBot.Commands
 
         public bool CheckOrInsertUser(MessageEventArgs e)
         {
-            if (!DatabaseManager.UserExists(e.Message.From.Id))
-            {
-                DatabaseManager.SaveNewUser(e.Message.From);
-                DatabaseManager.Submit();
-
-                return false;
-            }
-
             var user = DatabaseManager.GetUser(e.Message.From.Id);
-            if (user.groups.power < 100)
+
+            if (!RightManager.CheckRight("insert_allowed", user.id))
             {
                 AskUser($"Tut mir leid {e.Message.From.FirstName} du hast leider nicht genügend Rechte");
                 return false;
@@ -74,17 +67,14 @@ namespace NoobDevBot.Commands
                 return true;
             }
 
-
             return false;
         }
 
         private void insertStream(MessageEventArgs e)
         {
-            DatabaseManager.InsertNewStream(userId, date, streamTitle);
-            DatabaseManager.Submit();
-            DatabaseManager.GetNextStream();
+            var stream = DatabaseManager.InsertNewStream(userId, date, streamTitle);
 
-            AskUser("Dein Stream wurde erfolgreich eingetragen.");
+            AskUser($"Dein Stream wurde erfolgreich eingetragen. Die ID ist {stream.id}");
 
             RaiseFinishEvent(this, e);
             NextFunction = null;

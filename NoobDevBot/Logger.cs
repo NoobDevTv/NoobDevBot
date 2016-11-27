@@ -24,7 +24,7 @@ namespace NoobDevBot
             appendLine("started");
         }
 
-        public static void Log(string text, byte warningLevel = 0) => appendLine(text, warningLevel);
+        public static void Log(string text, byte warningLevel = 0) { return; }//appendLine(text, warningLevel);
 
         public static void EndLog()
         {

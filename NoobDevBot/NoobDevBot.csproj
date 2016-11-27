@@ -88,6 +88,7 @@
     <Compile Include="CommandManager.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\DeleteStreamCommand.cs" />
+    <Compile Include="Commands\GetRandomSmileyCommand.cs" />
     <Compile Include="Commands\HelloCommand.cs" />
     <Compile Include="Commands\InsertStreamCommand.cs" />
     <Compile Include="Commands\NextStreamCommand.cs" />
@@ -105,6 +106,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RightManager.cs" />
+    <Compile Include="Commands\SendRandomSmileyCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

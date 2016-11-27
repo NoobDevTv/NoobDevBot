@@ -22,18 +22,25 @@ namespace NoobDevBot
         {
             commandHandler = new CommandHandler<MessageEventArgs, bool>();
             commandDictionary = new ConcurrentDictionary<long, Func<MessageEventArgs, bool>>();
+            RightManager.Initialize();
             CommandManager.telegramBot = telegramBot;
 
             commandHandler["/hello"] += (e) => hello(e);
             commandHandler["/nextstream"] += (e) => nextStream(e);
             commandHandler["/insertstream"] += (e) => insertStream(e);
+            commandHandler["/deletestream"] += (e) => deleteStream(e);
+            commandHandler["/getrandomsmiley"] += (e) => getRandomSmiley(e);
+            //commandHandler["/sendsmiley"] += (e) => sendRandomSmiley(e);
 
+            RightManager.Add("insert_allowed", 100);
+            RightManager.Add("delete_allowed", 100);
         }
 
         public static bool Dispatch(string commandName, MessageEventArgs e)
         {
             if (commandName != null)
             {
+                DatabaseManager.InsertUserIfNotExist(e.Message.From);
                 Logger.Log($"User: {e.Message.From.Username ?? e.Message.From.FirstName} try to use {commandName}");
                 Console.WriteLine($"User: {e.Message.From.Username ?? e.Message.From.FirstName} try to use {commandName}");
                 commandName = commandName.ToLower();
@@ -90,6 +97,7 @@ namespace NoobDevBot
             return commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
 
         }
+
         private static bool nextStream(MessageEventArgs e)
         {
             var command = new NextStreamCommand(telegramBot, e.Message.Chat.Id);
@@ -100,6 +108,20 @@ namespace NoobDevBot
         private static bool hello(MessageEventArgs e)
         {
             var command = new HelloCommand(telegramBot, e.Message.Chat.Id);
+
+            return command.Dispatch(e);
+        }
+
+        private static bool getRandomSmiley(MessageEventArgs e)
+        {
+            var command = new GetRandomSmileyCommand(telegramBot, e.Message.Chat.Id);
+
+            return command.Dispatch(e);
+        }
+
+        private static bool sendRandomSmiley(MessageEventArgs e)
+        {
+            var command = new SendRandomSmileyCommand(telegramBot, e.Message.Chat.Id);
 
             return command.Dispatch(e);
         }

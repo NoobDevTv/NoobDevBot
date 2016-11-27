@@ -18,6 +18,30 @@ namespace NoobDevBot.Commands
         {
             this.telegramBot = telegramBot;
             this.id = id;
+            AskUser("Bitte gebe die ID des zu löschenden Streams ein");
+            NextFunction = DeleteTheStream;
         }
+
+        public bool DeleteTheStream(MessageEventArgs e)
+        {
+            int id;
+             
+            if (int.TryParse(e.Message.Text, out id))
+            {
+                var stream = DatabaseManager.GetStreamById(id);
+                if (DatabaseManager.DeleteStream(e.Message.From.Id, id))
+                {
+                    AskUser($"Stream {stream.title} wurde gelöscht");
+                    DatabaseManager.Submit();
+                    return true;
+                }
+            }
+
+            AskUser("Stream wurde nicht gelöscht");
+
+            return false;
+        }
+
+        private void AskUser(string text) => telegramBot.SendTextMessageAsync(id, text);
     }
 }

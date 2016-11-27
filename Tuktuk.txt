@@ -1,0 +1,8 @@
+- Neue Funktionierende version
+- Logger überarbeiten mit Dependency Injections
+- Sticker Command
+- RightsRequest Command
+- Server Management
+- Im Delete Command eine Stream Schnell auswahl
+- Windows Tool zur Serververwaltung
+- Server als .NET-Core -> damit wäre ein betrieb auf Linux möglich

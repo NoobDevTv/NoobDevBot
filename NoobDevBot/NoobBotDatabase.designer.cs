@@ -30,15 +30,21 @@ namespace NoobDevBot
 		
     #region Definitionen der Erweiterungsmethoden
     partial void OnCreated();
-    partial void Insertuser(user instance);
-    partial void Updateuser(user instance);
-    partial void Deleteuser(user instance);
-    partial void Insertstreams(streams instance);
-    partial void Updatestreams(streams instance);
-    partial void Deletestreams(streams instance);
     partial void Insertgroups(groups instance);
     partial void Updategroups(groups instance);
     partial void Deletegroups(groups instance);
+    partial void Insertgroups_relation(groups_relation instance);
+    partial void Updategroups_relation(groups_relation instance);
+    partial void Deletegroups_relation(groups_relation instance);
+    partial void Insertsmilies(smilies instance);
+    partial void Updatesmilies(smilies instance);
+    partial void Deletesmilies(smilies instance);
+    partial void Insertstreams(streams instance);
+    partial void Updatestreams(streams instance);
+    partial void Deletestreams(streams instance);
+    partial void Insertuser(user instance);
+    partial void Updateuser(user instance);
+    partial void Deleteuser(user instance);
     #endregion
 		
 		public NoobBotDatabaseDataContext() : 
@@ -71,11 +77,35 @@ namespace NoobDevBot
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<user> user
+		public System.Data.Linq.Table<groups> groups
 		{
 			get
 			{
-				return this.GetTable<user>();
+				return this.GetTable<groups>();
+			}
+		}
+		
+		public System.Data.Linq.Table<groups_relation> groups_relation
+		{
+			get
+			{
+				return this.GetTable<groups_relation>();
+			}
+		}
+		
+		public System.Data.Linq.Table<rights_relation> rights_relation
+		{
+			get
+			{
+				return this.GetTable<rights_relation>();
+			}
+		}
+		
+		public System.Data.Linq.Table<smilies> smilies
+		{
+			get
+			{
+				return this.GetTable<smilies>();
 			}
 		}
 		
@@ -87,30 +117,26 @@ namespace NoobDevBot
 			}
 		}
 		
-		public System.Data.Linq.Table<groups> groups
+		public System.Data.Linq.Table<user> user
 		{
 			get
 			{
-				return this.GetTable<groups>();
+				return this.GetTable<user>();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[user]")]
-	public partial class user : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.groups")]
+	public partial class groups : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private int _id;
 		
-		private int _group;
-		
 		private string _name;
 		
-		private EntitySet<streams> _streams;
-		
-		private EntityRef<groups> _groups;
+		private EntitySet<groups_relation> _groups_relation;
 		
     #region Definitionen der Erweiterungsmethoden
     partial void OnLoaded();
@@ -118,20 +144,17 @@ namespace NoobDevBot
     partial void OnCreated();
     partial void OnidChanging(int value);
     partial void OnidChanged();
-    partial void OngroupChanging(int value);
-    partial void OngroupChanged();
     partial void OnnameChanging(string value);
     partial void OnnameChanged();
     #endregion
 		
-		public user()
+		public groups()
 		{
-			this._streams = new EntitySet<streams>(new Action<streams>(this.attach_streams), new Action<streams>(this.detach_streams));
-			this._groups = default(EntityRef<groups>);
+			this._groups_relation = new EntitySet<groups_relation>(new Action<groups_relation>(this.attach_groups_relation), new Action<groups_relation>(this.detach_groups_relation));
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int id
 		{
 			get
@@ -151,27 +174,7 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[group]", Storage="_group", DbType="Int NOT NULL")]
-		public int group
-		{
-			get
-			{
-				return this._group;
-			}
-			set
-			{
-				if ((this._group != value))
-				{
-					this.OngroupChanging(value);
-					this.SendPropertyChanging();
-					this._group = value;
-					this.SendPropertyChanged("group");
-					this.OngroupChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(MAX)")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
 		public string name
 		{
 			get
@@ -191,50 +194,16 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="user_streams", Storage="_streams", ThisKey="id", OtherKey="userId")]
-		public EntitySet<streams> streams
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="groups_groups_relation", Storage="_groups_relation", ThisKey="id", OtherKey="group_id")]
+		public EntitySet<groups_relation> groups_relation
 		{
 			get
 			{
-				return this._streams;
+				return this._groups_relation;
 			}
 			set
 			{
-				this._streams.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="groups_user", Storage="_groups", ThisKey="group", OtherKey="id", IsForeignKey=true)]
-		public groups groups
-		{
-			get
-			{
-				return this._groups.Entity;
-			}
-			set
-			{
-				groups previousValue = this._groups.Entity;
-				if (((previousValue != value) 
-							|| (this._groups.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._groups.Entity = null;
-						previousValue.user.Remove(this);
-					}
-					this._groups.Entity = value;
-					if ((value != null))
-					{
-						value.user.Add(this);
-						this._group = value.id;
-					}
-					else
-					{
-						this._group = default(int);
-					}
-					this.SendPropertyChanged("groups");
-				}
+				this._groups_relation.Assign(value);
 			}
 		}
 		
@@ -258,16 +227,351 @@ namespace NoobDevBot
 			}
 		}
 		
-		private void attach_streams(streams entity)
+		private void attach_groups_relation(groups_relation entity)
 		{
 			this.SendPropertyChanging();
-			entity.user = this;
+			entity.groups = this;
 		}
 		
-		private void detach_streams(streams entity)
+		private void detach_groups_relation(groups_relation entity)
 		{
 			this.SendPropertyChanging();
-			entity.user = null;
+			entity.groups = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.groups_relation")]
+	public partial class groups_relation : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _user_id;
+		
+		private int _group_id;
+		
+		private EntityRef<groups> _groups;
+		
+		private EntityRef<user> _user;
+		
+    #region Definitionen der Erweiterungsmethoden
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void Onuser_idChanging(int value);
+    partial void Onuser_idChanged();
+    partial void Ongroup_idChanging(int value);
+    partial void Ongroup_idChanged();
+    #endregion
+		
+		public groups_relation()
+		{
+			this._groups = default(EntityRef<groups>);
+			this._user = default(EntityRef<user>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_user_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int user_id
+		{
+			get
+			{
+				return this._user_id;
+			}
+			set
+			{
+				if ((this._user_id != value))
+				{
+					if (this._user.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onuser_idChanging(value);
+					this.SendPropertyChanging();
+					this._user_id = value;
+					this.SendPropertyChanged("user_id");
+					this.Onuser_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_group_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int group_id
+		{
+			get
+			{
+				return this._group_id;
+			}
+			set
+			{
+				if ((this._group_id != value))
+				{
+					if (this._groups.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Ongroup_idChanging(value);
+					this.SendPropertyChanging();
+					this._group_id = value;
+					this.SendPropertyChanged("group_id");
+					this.Ongroup_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="groups_groups_relation", Storage="_groups", ThisKey="group_id", OtherKey="id", IsForeignKey=true)]
+		public groups groups
+		{
+			get
+			{
+				return this._groups.Entity;
+			}
+			set
+			{
+				groups previousValue = this._groups.Entity;
+				if (((previousValue != value) 
+							|| (this._groups.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._groups.Entity = null;
+						previousValue.groups_relation.Remove(this);
+					}
+					this._groups.Entity = value;
+					if ((value != null))
+					{
+						value.groups_relation.Add(this);
+						this._group_id = value.id;
+					}
+					else
+					{
+						this._group_id = default(int);
+					}
+					this.SendPropertyChanged("groups");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="user_groups_relation", Storage="_user", ThisKey="user_id", OtherKey="id", IsForeignKey=true)]
+		public user user
+		{
+			get
+			{
+				return this._user.Entity;
+			}
+			set
+			{
+				user previousValue = this._user.Entity;
+				if (((previousValue != value) 
+							|| (this._user.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._user.Entity = null;
+						previousValue.groups_relation.Remove(this);
+					}
+					this._user.Entity = value;
+					if ((value != null))
+					{
+						value.groups_relation.Add(this);
+						this._user_id = value.id;
+					}
+					else
+					{
+						this._user_id = default(int);
+					}
+					this.SendPropertyChanged("user");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.rights_relation")]
+	public partial class rights_relation
+	{
+		
+		private bool _is_group;
+		
+		private int _reference;
+		
+		private string _right_id;
+		
+		private byte _power;
+		
+		public rights_relation()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_is_group", DbType="Bit NOT NULL")]
+		public bool is_group
+		{
+			get
+			{
+				return this._is_group;
+			}
+			set
+			{
+				if ((this._is_group != value))
+				{
+					this._is_group = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_reference", DbType="Int NOT NULL")]
+		public int reference
+		{
+			get
+			{
+				return this._reference;
+			}
+			set
+			{
+				if ((this._reference != value))
+				{
+					this._reference = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_right_id", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string right_id
+		{
+			get
+			{
+				return this._right_id;
+			}
+			set
+			{
+				if ((this._right_id != value))
+				{
+					this._right_id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_power", DbType="TinyInt NOT NULL")]
+		public byte power
+		{
+			get
+			{
+				return this._power;
+			}
+			set
+			{
+				if ((this._power != value))
+				{
+					this._power = value;
+				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.smilies")]
+	public partial class smilies : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _unicode;
+		
+    #region Definitionen der Erweiterungsmethoden
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnunicodeChanging(string value);
+    partial void OnunicodeChanged();
+    #endregion
+		
+		public smilies()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_unicode", DbType="NVarChar(1) NOT NULL", CanBeNull=false)]
+		public string unicode
+		{
+			get
+			{
+				return this._unicode;
+			}
+			set
+			{
+				if ((this._unicode != value))
+				{
+					this.OnunicodeChanging(value);
+					this.SendPropertyChanging();
+					this._unicode = value;
+					this.SendPropertyChanged("unicode");
+					this.OnunicodeChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 	
@@ -470,8 +774,8 @@ namespace NoobDevBot
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.groups")]
-	public partial class groups : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[user]")]
+	public partial class user : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -480,9 +784,9 @@ namespace NoobDevBot
 		
 		private string _name;
 		
-		private int _power;
+		private EntitySet<groups_relation> _groups_relation;
 		
-		private EntitySet<user> _user;
+		private EntitySet<streams> _streams;
 		
     #region Definitionen der Erweiterungsmethoden
     partial void OnLoaded();
@@ -492,17 +796,16 @@ namespace NoobDevBot
     partial void OnidChanged();
     partial void OnnameChanging(string value);
     partial void OnnameChanged();
-    partial void OnpowerChanging(int value);
-    partial void OnpowerChanged();
     #endregion
 		
-		public groups()
+		public user()
 		{
-			this._user = new EntitySet<user>(new Action<user>(this.attach_user), new Action<user>(this.detach_user));
+			this._groups_relation = new EntitySet<groups_relation>(new Action<groups_relation>(this.attach_groups_relation), new Action<groups_relation>(this.detach_groups_relation));
+			this._streams = new EntitySet<streams>(new Action<streams>(this.attach_streams), new Action<streams>(this.detach_streams));
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
 		public int id
 		{
 			get
@@ -522,7 +825,7 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(MAX)")]
 		public string name
 		{
 			get
@@ -542,36 +845,29 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_power", DbType="Int NOT NULL")]
-		public int power
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="user_groups_relation", Storage="_groups_relation", ThisKey="id", OtherKey="user_id")]
+		public EntitySet<groups_relation> groups_relation
 		{
 			get
 			{
-				return this._power;
+				return this._groups_relation;
 			}
 			set
 			{
-				if ((this._power != value))
-				{
-					this.OnpowerChanging(value);
-					this.SendPropertyChanging();
-					this._power = value;
-					this.SendPropertyChanged("power");
-					this.OnpowerChanged();
-				}
+				this._groups_relation.Assign(value);
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="groups_user", Storage="_user", ThisKey="id", OtherKey="group")]
-		public EntitySet<user> user
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="user_streams", Storage="_streams", ThisKey="id", OtherKey="userId")]
+		public EntitySet<streams> streams
 		{
 			get
 			{
-				return this._user;
+				return this._streams;
 			}
 			set
 			{
-				this._user.Assign(value);
+				this._streams.Assign(value);
 			}
 		}
 		
@@ -595,16 +891,28 @@ namespace NoobDevBot
 			}
 		}
 		
-		private void attach_user(user entity)
+		private void attach_groups_relation(groups_relation entity)
 		{
 			this.SendPropertyChanging();
-			entity.groups = this;
+			entity.user = this;
 		}
 		
-		private void detach_user(user entity)
+		private void detach_groups_relation(groups_relation entity)
 		{
 			this.SendPropertyChanging();
-			entity.groups = null;
+			entity.user = null;
+		}
+		
+		private void attach_streams(streams entity)
+		{
+			this.SendPropertyChanging();
+			entity.user = this;
+		}
+		
+		private void detach_streams(streams entity)
+		{
+			this.SendPropertyChanging();
+			entity.user = null;
 		}
 	}
 }

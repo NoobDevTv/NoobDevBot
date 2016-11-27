@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="NoobBotDatabase">
+  <DataContextMoniker Name="/NoobBotDatabaseDataContext" />
+  <nestedChildShapes>
+    <classShape Id="e0d64505-d045-4d56-8e50-a6246ef1b56e" absoluteBounds="2.5, 2.375, 2, 1.1939925130208333">
+      <DataClassMoniker Name="/NoobBotDatabaseDataContext/smilies" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5aac3732-1a67-4c23-8cb0-70b03f3e74f3" absoluteBounds="2.5149999999999997, 2.835, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
