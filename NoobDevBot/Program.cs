@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using File = System.IO.File;
@@ -12,12 +13,12 @@ namespace NoobDevBot
 {
     class Program
     {
-        
+
         public static TelegramBotClient Bot;
-        
+
         static void Main(string[] args)
         {
-
+            AutoResetEvent are = new AutoResetEvent(false);
             Logger.StartLog();
 
             if (!File.Exists("key.txt"))
@@ -38,18 +39,23 @@ namespace NoobDevBot
 
             Bot.StartReceiving();
 
-            Console.ReadKey();
+            are.WaitOne();
+            
             Logger.EndLog();
         }
 
         static string commandFromMessage(Message message)
         {
-            var command = message.Text.Split().FirstOrDefault(f => f.StartsWith("/"));
+            var command = message?.Text?.Split().FirstOrDefault(f => f.StartsWith("/"));
+
+            if (command == null)
+                return null;
+
             var splitcont = command.ToLower().Split('@');
-            
+
             if (splitcont.Length > 1 && !splitcont.Any(s => s == "noobdev_bot" || s == "noobdevbot"))
                 return "null";
-            
+
             return splitcont.FirstOrDefault();
         }
     }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NoobDevBot.Properties {
+namespace Installer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -26,22 +26,11 @@ namespace NoobDevBot.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=localhost;Initial Catalog=NoobBotDatabase;Integrated Security=True;En" +
-            "crypt=False;TrustServerCertificate=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=HAL2015;Initial Catalog=NoobBotDatabase;Integrated Security=True;Conn" +
+            "ect Timeout=60;Encrypt=False;TrustServerCertificate=True")]
         public string NoobBotDatabaseConnectionString {
             get {
                 return ((string)(this["NoobBotDatabaseConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=HAL2015;Initial Catalog=NoobBotDatabase;Integrated Security=True;Conn" +
-            "ect Timeout=60;Encrypt=False;TrustServerCertificate=True")]
-        public string NoobBotDatabaseConnectionString1 {
-            get {
-                return ((string)(this["NoobBotDatabaseConnectionString1"]));
             }
         }
     }

@@ -1,0 +1,5 @@
+hello - Sagt hallo
+nextstream - gibt den nächsten Stream aus
+insertstream - füge einen Stream hinzu (bedarf rechte)
+deletestream - löscht einen Stream (bedarf rechte)
+getrandomsmiley - sendet einen zufalls smiley
