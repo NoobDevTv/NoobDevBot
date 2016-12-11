@@ -8,6 +8,7 @@ using Telegram.Bot.Args;
 
 namespace NoobDevBot.Commands
 {
+    [Command("/hello")]
     internal class HelloCommand
         : Command<MessageEventArgs, bool>
     {

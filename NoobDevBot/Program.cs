@@ -36,7 +36,7 @@ namespace NoobDevBot
             CommandManager.Initialize(Bot);
 
             Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(commandFromMessage(e.Message), e);
-
+                        
             Bot.StartReceiving();
 
             are.WaitOne();

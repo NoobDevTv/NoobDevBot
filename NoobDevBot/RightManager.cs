@@ -26,17 +26,17 @@ namespace NoobDevBot
             if (!rights.TryGetValue(id, out needed_power))
                 return false;
 
-            byte? power = DatabaseManager.GetPower(id, user_id, false);
+            byte power = DatabaseManager.GetPower(id, user_id, false) ?? 0;
 
             foreach (var group in DatabaseManager.GetGroups(user_id))
             {
-                var p = DatabaseManager.GetPower(id, group.group_id, true);
+                var p = DatabaseManager.GetPower(id, group.group_id, true) ?? 0;
 
                 if (p > power)
                     power = p;
             }
 
-            return (power ?? 0) >= needed_power ;
+            return power >= needed_power;
         }
     }
 }

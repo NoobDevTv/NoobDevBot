@@ -1,8 +1,13 @@
 - Neue Funktionierende version
 - Logger überarbeiten mit Dependency Injections
+- GetMyList Command
 - Sticker Command
 - RightsRequest Command
 - Server Management
 - Im Delete Command eine Stream Schnell auswahl
 - Windows Tool zur Serververwaltung
 - Server als .NET-Core -> damit wäre ein betrieb auf Linux möglich
+- Querys und so
+- Userrecht als Methoden Attribute
+- Commands mit Attributen Registrieren
+-> Nächstesmal guck mal zwei nach oben

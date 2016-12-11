@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types.Enums;
 
 namespace NoobDevBot.Commands
 {
+    [Command("/deletestream")]
     internal class DeleteStreamCommand
         : Command<MessageEventArgs, bool>
     {
@@ -18,10 +20,22 @@ namespace NoobDevBot.Commands
         {
             this.telegramBot = telegramBot;
             this.id = id;
-            AskUser("Bitte gebe die ID des zu löschenden Streams ein");
-            NextFunction = DeleteTheStream;
+            NextFunction = AskUser;
         }
 
+        public bool AskUser(MessageEventArgs e)
+        {
+            if (e.Message.Chat.Type == ChatType.Group || e.Message.Chat.Type == ChatType.Supergroup)
+            {
+                telegramBot.SendTextMessageAsync(e.Message.Chat.Id, "Diese Funktion ist in Gruppen nicht erlaubt");
+                return false;
+            }
+
+            AskUser("Bitte gebe die ID des zu löschenden Streams ein");
+            NextFunction = DeleteTheStream;
+            return true;
+        }
+        
         public bool DeleteTheStream(MessageEventArgs e)
         {
             int id;

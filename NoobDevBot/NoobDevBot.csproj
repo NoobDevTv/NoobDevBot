@@ -87,10 +87,13 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="CommandManager.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandAttribute.cs" />
     <Compile Include="Commands\DeleteStreamCommand.cs" />
     <Compile Include="Commands\GetRandomSmileyCommand.cs" />
     <Compile Include="Commands\HelloCommand.cs" />
+    <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InsertStreamCommand.cs" />
+    <Compile Include="Commands\MyStreamsCommand.cs" />
     <Compile Include="Commands\NextStreamCommand.cs" />
     <Compile Include="DatabaseManager.cs" />
     <Compile Include="Logger.cs" />

@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types.Enums;
 
 namespace NoobDevBot.Commands
 {
+    [Command("/insertstream")]
     internal class InsertStreamCommand
         : Command<MessageEventArgs, bool>
     {
@@ -28,6 +30,13 @@ namespace NoobDevBot.Commands
 
         public bool CheckOrInsertUser(MessageEventArgs e)
         {
+            if (e.Message.Chat.Type == ChatType.Group || e.Message.Chat.Type == ChatType.Supergroup)
+            {
+                telegramBotClient.SendTextMessageAsync(e.Message.Chat.Id,
+                    "Diese Funktion ist in Gruppen nicht erlaubt");
+                return false;
+            }
+
             var user = DatabaseManager.GetUser(e.Message.From.Id);
 
             if (!RightManager.CheckRight("insert_allowed", user.id))
@@ -45,7 +54,7 @@ namespace NoobDevBot.Commands
             return true;
         }
 
-        public void AskUser(string text) => telegramBotClient.SendTextMessageAsync(id, text);
+        private void AskUser(string text) => telegramBotClient.SendTextMessageAsync(id, text);
 
         public bool GetTitleFromUser(MessageEventArgs e)
         {

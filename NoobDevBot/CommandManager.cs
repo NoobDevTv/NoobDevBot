@@ -9,6 +9,7 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using System.Reflection;
 
 namespace NoobDevBot
 {
@@ -17,20 +18,23 @@ namespace NoobDevBot
         private static CommandHandler<MessageEventArgs, bool> commandHandler;
         private static TelegramBotClient telegramBot;
         private static ConcurrentDictionary<long, Func<MessageEventArgs, bool>> commandDictionary;
+        private static ConcurrentDictionary<long, Func<InlineQueryEventArgs, bool>> waitForInlineQuery;
 
         public static void Initialize(TelegramBotClient telegramBot)
         {
             commandHandler = new CommandHandler<MessageEventArgs, bool>();
             commandDictionary = new ConcurrentDictionary<long, Func<MessageEventArgs, bool>>();
+            waitForInlineQuery = new ConcurrentDictionary<long, Func<InlineQueryEventArgs, bool>>();
+
             RightManager.Initialize();
             CommandManager.telegramBot = telegramBot;
 
-            commandHandler["/hello"] += (e) => hello(e);
-            commandHandler["/nextstream"] += (e) => nextStream(e);
-            commandHandler["/insertstream"] += (e) => insertStream(e);
-            commandHandler["/deletestream"] += (e) => deleteStream(e);
-            commandHandler["/getrandomsmiley"] += (e) => getRandomSmiley(e);
-            //commandHandler["/sendsmiley"] += (e) => sendRandomSmiley(e);
+            var commands = Assembly.GetExecutingAssembly().GetTypes().Where(
+                t => t.GetCustomAttribute<CommandAttribute>() != null).ToList();
+
+            foreach (var item in commands)
+                commandHandler[item.GetCustomAttribute<CommandAttribute>().Name] += (e)
+                    => initializeCommand(item, e);
 
             RightManager.Add("insert_allowed", 100);
             RightManager.Add("delete_allowed", 100);
@@ -58,74 +62,34 @@ namespace NoobDevBot
 
             return false;
         }
+        public static bool Dispatch(string commandName, InlineQueryEventArgs e)
+        {
+            Func<InlineQueryEventArgs, bool> method;
+            if (waitForInlineQuery.TryRemove(e.InlineQuery.From.Id, out method))
+                return method(e);
+
+            return false;
+        }
 
         public static async Task<bool> DispatchAsync(string commandName, MessageEventArgs e)
         {
             return await Task.Run(() => Dispatch(commandName, e));
         }
-
-        private static bool deleteStream(MessageEventArgs e)
+        public static async Task<bool> DispatchAsync(string commandName, InlineQueryEventArgs e)
         {
-            if (e.Message.Chat.Type == ChatType.Group || e.Message.Chat.Type == ChatType.Supergroup)
-            {
-                telegramBot.SendTextMessageAsync(e.Message.Chat.Id, "Diese Funktion ist in Gruppen nicht erlaubt");
-                return false;
-            }
+            return await Task.Run(() => Dispatch(commandName, e));
+        }
 
-            var command = new DeleteStreamCommand(telegramBot, e.Message.Chat.Id);
-
+        public static bool initializeCommand(Type commandType, MessageEventArgs e)
+        {
+            var command = (ICommand<MessageEventArgs, bool>)Activator.CreateInstance(
+                                           commandType, telegramBot, e.Message.Chat.Id);
 
             command.FinishEvent += finishedCommand;
-
-            return commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
-        }
-
-        private static bool insertStream(MessageEventArgs e)
-        {
-            if (e.Message.Chat.Type == ChatType.Group || e.Message.Chat.Type == ChatType.Supergroup)
-            {
-                telegramBot.SendTextMessageAsync(e.Message.Chat.Id, "Diese Funktion ist in Gruppen nicht erlaubt");
-                return false;
-            }
-
-            var command = new InsertStreamCommand(telegramBot, e.Message.Chat.Id);
-
-            command.FinishEvent += finishedCommand;
-
-            command.NextFunction(e);
-
-            return commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
-
-        }
-
-        private static bool nextStream(MessageEventArgs e)
-        {
-            var command = new NextStreamCommand(telegramBot, e.Message.Chat.Id);
-
+            commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
             return command.Dispatch(e);
         }
-
-        private static bool hello(MessageEventArgs e)
-        {
-            var command = new HelloCommand(telegramBot, e.Message.Chat.Id);
-
-            return command.Dispatch(e);
-        }
-
-        private static bool getRandomSmiley(MessageEventArgs e)
-        {
-            var command = new GetRandomSmileyCommand(telegramBot, e.Message.Chat.Id);
-
-            return command.Dispatch(e);
-        }
-
-        private static bool sendRandomSmiley(MessageEventArgs e)
-        {
-            var command = new SendRandomSmileyCommand(telegramBot, e.Message.Chat.Id);
-
-            return command.Dispatch(e);
-        }
-
+        
         private static void finishedCommand(object sender, MessageEventArgs e)
         {
             Func<MessageEventArgs, bool> method;

@@ -8,6 +8,7 @@ using Telegram.Bot.Args;
 
 namespace NoobDevBot.Commands
 {
+    [Command("/nextstream")]
     internal class NextStreamCommand
         : Command<MessageEventArgs, bool>
     {

@@ -9,6 +9,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace NoobDevBot.Commands
 {
+    [Command("/getrandomsmiley")]
     internal class GetRandomSmileyCommand
         : Command<MessageEventArgs, bool>
     {
