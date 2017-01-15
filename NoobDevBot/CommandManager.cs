@@ -45,11 +45,7 @@ namespace NoobDevBot
                 if (rights != null)
                     foreach (var right in rights)
                         RightManager.Add(right.Tag, right.NeededPower);
-
-
             }
-
-
         }
 
         public static bool Dispatch(string commandName, MessageEventArgs e)
@@ -83,14 +79,9 @@ namespace NoobDevBot
             return false;
         }
 
-        public static async Task<bool> DispatchAsync(string commandName, MessageEventArgs e)
-        {
-            return await Task.Run(() => Dispatch(commandName, e));
-        }
-        public static async Task<bool> DispatchAsync(string commandName, InlineQueryEventArgs e)
-        {
-            return await Task.Run(() => Dispatch(commandName, e));
-        }
+        public static void DispatchAsync(string commandName, MessageEventArgs e) => Task.Run(() => Dispatch(commandName, e));
+
+        public static void DispatchAsync(string commandName, InlineQueryEventArgs e) => Task.Run(() => Dispatch(commandName, e));
 
         public static bool initializeCommand(Type commandType, MessageEventArgs e)
         {
@@ -98,8 +89,21 @@ namespace NoobDevBot
                                            commandType, telegramBot, e.Message.Chat.Id);
 
             command.FinishEvent += finishedCommand;
+
             commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
+
+            if (commandType.BaseType.GenericTypeArguments.Count() == 3)
+            {
+                var tmp = (Command<MessageEventArgs, InlineQueryEventArgs, bool>)command;
+                tmp.WaitForInlineQuery += tmp_WaitForInlineQuery;
+            }
+
             return command.Dispatch(e);
+        }
+
+        private static void tmp_WaitForInlineQuery(object sender, InlineQueryEventArgs parameter)
+        {
+            //waitForInlineQuery.TryAdd(parameter, parameter.InlineQuery.)
         }
 
         private static void finishedCommand(object sender, MessageEventArgs e)

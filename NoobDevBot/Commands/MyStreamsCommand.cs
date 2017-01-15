@@ -11,8 +11,8 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace NoobDevBot.Commands
 {
-    [Command("/mystreams", "/ms" )]
-    public class MyStreamsCommand : Command<MessageEventArgs, bool>
+    [Command("/mystreams", "/ms")]
+    public class MyStreamsCommand : Command<MessageEventArgs, InlineQueryEventArgs, bool>
     {
         private long id;
         private TelegramBotClient telegramBotClient;
@@ -23,7 +23,7 @@ namespace NoobDevBot.Commands
             telegramBotClient = telegramBot;
             id = chatId;
         }
-        
+
 
         private bool GetStreams(MessageEventArgs arg)
         {
@@ -35,7 +35,7 @@ namespace NoobDevBot.Commands
             }
 
             var mark = new InlineKeyboardMarkup();
-            
+
             var streams = DatabaseManager.GetUserStreams(arg.Message.From.Id);
             mark.InlineKeyboard = new InlineKeyboardButton[streams.Count][];
 
@@ -48,7 +48,7 @@ namespace NoobDevBot.Commands
                 mark.InlineKeyboard[i][0] = button;
             }
 
-            telegramBotClient.SendTextMessageAsync(id,"Deine Streams:", replyMarkup: mark);
+            telegramBotClient.SendTextMessageAsync(id, "Deine Streams:", replyMarkup: mark);
 
             return true;
         }

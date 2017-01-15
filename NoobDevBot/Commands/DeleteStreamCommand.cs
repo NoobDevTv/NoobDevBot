@@ -38,12 +38,12 @@ namespace NoobDevBot.Commands
         
         public bool DeleteTheStream(MessageEventArgs e)
         {
-            int id;
+            int tmpId;
              
-            if (int.TryParse(e.Message.Text, out id))
+            if (int.TryParse(e.Message.Text, out tmpId))
             {
-                var stream = DatabaseManager.GetStreamById(id);
-                if (DatabaseManager.DeleteStream(e.Message.From.Id, id))
+                var stream = DatabaseManager.GetStreamById(tmpId);
+                if (DatabaseManager.DeleteStream(e.Message.From.Id, tmpId))
                 {
                     AskUser($"Stream {stream.title} wurde gelöscht");
                     DatabaseManager.Submit();

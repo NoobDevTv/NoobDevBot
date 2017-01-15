@@ -1,6 +1,5 @@
 - Neue Funktionierende version
 - Logger überarbeiten mit Dependency Injections
-- GetMyList Command
 - Sticker Command
 - RightsRequest Command
 - Server Management
@@ -8,6 +7,7 @@
 - Windows Tool zur Serververwaltung
 - Server als .NET-Core -> damit wäre ein betrieb auf Linux möglich
 - Querys und so
-- Userrecht als Methoden Attribute
-- Commands mit Attributen Registrieren
--> Nächstesmal guck mal zwei nach oben
+=> Heey ihr zwei ihr müsst Query gedöns fertig implementieren aber irgend wie anderst weil so funzt das nämlich nicht ihr idioten.
+Grüße,
+
+Vergangenheits susch und Vergangenheits Marcus
