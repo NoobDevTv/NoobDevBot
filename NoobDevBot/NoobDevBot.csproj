@@ -88,6 +88,7 @@
     <Compile Include="CommandManager.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandAttribute.cs" />
+    <Compile Include="Commands\CommandRightAttribute.cs" />
     <Compile Include="Commands\DeleteStreamCommand.cs" />
     <Compile Include="Commands\GetRandomSmileyCommand.cs" />
     <Compile Include="Commands\HelloCommand.cs" />

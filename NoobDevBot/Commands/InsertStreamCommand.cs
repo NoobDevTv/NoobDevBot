@@ -10,7 +10,8 @@ using Telegram.Bot.Types.Enums;
 
 namespace NoobDevBot.Commands
 {
-    [Command("/insertstream")]
+    [Command("/insertstream"),
+        CommandRight("insert_allowed", 100)]
     internal class InsertStreamCommand
         : Command<MessageEventArgs, bool>
     {

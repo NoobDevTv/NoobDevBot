@@ -19,8 +19,6 @@ namespace NoobDevBot.Commands
 
         public TOut Dispatch(TParameter parameter) => NextFunction(parameter);
        
-        
-
         public void RaiseFinishEvent(object sender, TParameter e) => FinishEvent?.Invoke(sender, e);
 
     }

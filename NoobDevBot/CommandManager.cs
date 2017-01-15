@@ -29,15 +29,27 @@ namespace NoobDevBot
             RightManager.Initialize();
             CommandManager.telegramBot = telegramBot;
 
-            var commands = Assembly.GetExecutingAssembly().GetTypes().Where(
-                t => t.GetCustomAttribute<CommandAttribute>() != null).ToList();
 
-            foreach (var item in commands)
-                commandHandler[item.GetCustomAttribute<CommandAttribute>().Name] += (e)
-                    => initializeCommand(item, e);
+            var types = Assembly.GetExecutingAssembly().GetTypes();
 
-            RightManager.Add("insert_allowed", 100);
-            RightManager.Add("delete_allowed", 100);
+            foreach (var item in types)
+            {
+                var command = item.GetCustomAttribute<CommandAttribute>();
+                var rights = item.GetCustomAttributes<CommandRightAttribute>();
+
+                if (command == null)
+                    continue;
+
+                commandHandler[command.Name] += (e) => initializeCommand(item, e);
+
+                if (rights != null)
+                    foreach (var right in rights)
+                        RightManager.Add(right.Tag, right.NeededPower);
+
+
+            }
+
+
         }
 
         public static bool Dispatch(string commandName, MessageEventArgs e)
@@ -89,7 +101,7 @@ namespace NoobDevBot
             commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
             return command.Dispatch(e);
         }
-        
+
         private static void finishedCommand(object sender, MessageEventArgs e)
         {
             Func<MessageEventArgs, bool> method;
