@@ -12,20 +12,20 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace NoobDevBot.Commands
 {
     [Command("/mystreams", "/ms")]
-    public class MyStreamsCommand : Command<MessageEventArgs, InlineQueryEventArgs, bool>
+    public class MyStreamsCommand : Command<MessageEventArgs, CallbackQueryEventArgs, bool>
     {
         private long id;
         private TelegramBotClient telegramBotClient;
 
         public MyStreamsCommand(TelegramBotClient telegramBot, long chatId)
         {
-            NextFunction = GetStreams;
+            NextFunction = getStreams;
             telegramBotClient = telegramBot;
             id = chatId;
         }
 
 
-        private bool GetStreams(MessageEventArgs arg)
+        private bool getStreams(MessageEventArgs arg)
         {
             if (arg.Message.Chat.Type == ChatType.Group || arg.Message.Chat.Type == ChatType.Supergroup)
             {
@@ -44,12 +44,21 @@ namespace NoobDevBot.Commands
                 mark.InlineKeyboard[i] = new InlineKeyboardButton[1];
 
                 var button = new InlineKeyboardButton(
-                    $"id:{streams[i].id}, Title: {streams[i].title}, Datum: {streams[i].start}", $"/{streams[i].id}");
+                    $"id:{streams[i].id}, Title: {streams[i].title}, Datum: {streams[i].start}", $"{streams[i].id}");
                 mark.InlineKeyboard[i][0] = button;
             }
 
             telegramBotClient.SendTextMessageAsync(id, "Deine Streams:", replyMarkup: mark);
 
+            WaitForQuery(answer, id);
+
+            return true;
+        }
+
+        private bool answer(CallbackQueryEventArgs args)
+        {
+            Console.WriteLine(args.CallbackQuery.Data);
+            
             return true;
         }
 

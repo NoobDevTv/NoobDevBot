@@ -5,13 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace NoobDevBot.Commands
 {
     [Command("/deletestream")]
     internal class DeleteStreamCommand
-        : Command<MessageEventArgs, bool>
+        : Command<MessageEventArgs, CallbackQueryEventArgs, bool>
     {
         private long id;
         private TelegramBotClient telegramBot;
@@ -31,19 +33,19 @@ namespace NoobDevBot.Commands
                 return false;
             }
 
-            AskUser("Bitte gebe die ID des zu löschenden Streams ein");
-            NextFunction = DeleteTheStream;
+            sendStreams(e);
+            NextFunction = AskUser;
             return true;
         }
         
-        public bool DeleteTheStream(MessageEventArgs e)
+        public bool DeleteTheStream(CallbackQueryEventArgs e)
         {
             int tmpId;
              
-            if (int.TryParse(e.Message.Text, out tmpId))
+            if (int.TryParse(e.CallbackQuery.Data, out tmpId))
             {
                 var stream = DatabaseManager.GetStreamById(tmpId);
-                if (DatabaseManager.DeleteStream(e.Message.From.Id, tmpId))
+                if (DatabaseManager.DeleteStream(e.CallbackQuery.From.Id, tmpId))
                 {
                     AskUser($"Stream {stream.title} wurde gelöscht");
                     DatabaseManager.Submit();
@@ -52,10 +54,33 @@ namespace NoobDevBot.Commands
             }
 
             AskUser("Stream wurde nicht gelöscht");
+            
 
             return false;
         }
-
+        
         private void AskUser(string text) => telegramBot.SendTextMessageAsync(id, text);
+
+        private void sendStreams(MessageEventArgs arg)
+        {
+            var mark = new InlineKeyboardMarkup();
+
+            var streams = DatabaseManager.GetUserStreams(arg.Message.From.Id);
+            mark.InlineKeyboard = new InlineKeyboardButton[streams.Count][];
+
+            for (int i = 0; i < streams.Count; i++)
+            {
+                mark.InlineKeyboard[i] = new InlineKeyboardButton[1];
+
+                var button = new InlineKeyboardButton(
+                    $"id:{streams[i].id}, Title: {streams[i].title}, Datum: {streams[i].start}", $"{streams[i].id}");
+                mark.InlineKeyboard[i][0] = button;
+            }
+
+            telegramBot.SendTextMessageAsync(id, "Deine Streams:", replyMarkup: mark);
+           
+
+            WaitForQuery(DeleteTheStream, id);
+        }
     }
 }

@@ -18,13 +18,13 @@ namespace NoobDevBot
         private static CommandHandler<MessageEventArgs, bool> commandHandler;
         private static TelegramBotClient telegramBot;
         private static ConcurrentDictionary<long, Func<MessageEventArgs, bool>> commandDictionary;
-        private static ConcurrentDictionary<long, Func<InlineQueryEventArgs, bool>> waitForInlineQuery;
+        private static ConcurrentDictionary<long, Func<CallbackQueryEventArgs, bool>> waitForInlineQuery;
 
         public static void Initialize(TelegramBotClient telegramBot)
         {
             commandHandler = new CommandHandler<MessageEventArgs, bool>();
             commandDictionary = new ConcurrentDictionary<long, Func<MessageEventArgs, bool>>();
-            waitForInlineQuery = new ConcurrentDictionary<long, Func<InlineQueryEventArgs, bool>>();
+            waitForInlineQuery = new ConcurrentDictionary<long, Func<CallbackQueryEventArgs, bool>>();
 
             RightManager.Initialize();
             CommandManager.telegramBot = telegramBot;
@@ -70,18 +70,17 @@ namespace NoobDevBot
 
             return false;
         }
-        public static bool Dispatch(string commandName, InlineQueryEventArgs e)
+        public static bool Dispatch(string commandName, CallbackQueryEventArgs e)
         {
-            Func<InlineQueryEventArgs, bool> method;
-            if (waitForInlineQuery.TryRemove(e.InlineQuery.From.Id, out method))
+            Func<CallbackQueryEventArgs, bool> method;
+            if (waitForInlineQuery.TryRemove(e.CallbackQuery.From.Id, out method))
                 return method(e);
 
             return false;
         }
 
         public static void DispatchAsync(string commandName, MessageEventArgs e) => Task.Run(() => Dispatch(commandName, e));
-
-        public static void DispatchAsync(string commandName, InlineQueryEventArgs e) => Task.Run(() => Dispatch(commandName, e));
+        public static void DispatchAsync(string commandName, CallbackQueryEventArgs e) => Task.Run(() => Dispatch(commandName, e));
 
         public static bool initializeCommand(Type commandType, MessageEventArgs e)
         {
@@ -94,16 +93,18 @@ namespace NoobDevBot
 
             if (commandType.BaseType.GenericTypeArguments.Count() == 3)
             {
-                var tmp = (Command<MessageEventArgs, InlineQueryEventArgs, bool>)command;
+                var tmp = (Command<MessageEventArgs, CallbackQueryEventArgs, bool>)command;
                 tmp.WaitForInlineQuery += tmp_WaitForInlineQuery;
+                
             }
 
             return command.Dispatch(e);
         }
 
-        private static void tmp_WaitForInlineQuery(object sender, InlineQueryEventArgs parameter)
+        private static void tmp_WaitForInlineQuery(object sender, Func<CallbackQueryEventArgs, bool> method)
         {
-            //waitForInlineQuery.TryAdd(parameter, parameter.InlineQuery.)
+            var tmp = (long)sender;
+            waitForInlineQuery.TryAdd(tmp, method);
         }
 
         private static void finishedCommand(object sender, MessageEventArgs e)

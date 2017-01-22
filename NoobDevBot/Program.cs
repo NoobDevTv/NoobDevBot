@@ -36,6 +36,9 @@ namespace NoobDevBot
             CommandManager.Initialize(Bot);
 
             Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(commandFromMessage(e.Message), e);
+            Bot.OnInlineQuery += (s, e) => { };
+            Bot.OnCallbackQuery += (s, e) => CommandManager.DispatchAsync("", e);
+            Bot.OnInlineResultChosen += (s, e) => {  };
                         
             Bot.StartReceiving();
 
