@@ -37,15 +37,15 @@ namespace NoobDevBot.Commands
             var mark = new InlineKeyboardMarkup();
 
             var streams = DatabaseManager.GetUserStreams(arg.Message.From.Id);
-            mark.InlineKeyboard = new InlineKeyboardButton[streams.Count][];
+            //mark.InlineKeyboard = new InlineKeyboardButton[streams.Count][];
 
             for (int i = 0; i < streams.Count; i++)
             {
-                mark.InlineKeyboard[i] = new InlineKeyboardButton[1];
+                //mark.InlineKeyboard[i] = new InlineKeyboardButton[1];
 
-                var button = new InlineKeyboardButton(
-                    $"id:{streams[i].id}, Title: {streams[i].title}, Datum: {streams[i].start}", $"{streams[i].id}");
-                mark.InlineKeyboard[i][0] = button;
+                //var button = new InlineKeyboardButton(
+                //    $"id:{streams[i].id}, Title: {streams[i].title}, Datum: {streams[i].start}", $"{streams[i].id}");
+                //mark.InlineKeyboard[i][0] = button;
             }
 
             telegramBotClient.SendTextMessageAsync(id, "Deine Streams:", replyMarkup: mark);

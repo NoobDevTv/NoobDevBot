@@ -13,10 +13,11 @@ namespace NoobDevBot
        
         static Logger()
         {
-            logfile = new StreamWriter(File.OpenWrite("log.txt"));
+            //logfile = new StreamWriter(File.OpenWrite("log.txt"));
+            return;
             logfile.AutoFlush = true;
             logfile.BaseStream.Position = logfile.BaseStream.Length;
-
+            
         }
 
         public static void StartLog()
@@ -29,11 +30,11 @@ namespace NoobDevBot
         public static void EndLog()
         {
             appendLine("end");
-            logfile.Close();
+            //logfile.Close();
             
         }
 
-        private static void appendLine(string text, byte warningLevel = 0) => logfile.WriteLine($"[{DateTime.Now}]({warningLevel}) {text}");
+        private static void appendLine(string text, byte warningLevel = 0) { return; }//logfile.WriteLine($"[{DateTime.Now}]({warningLevel}) {text}");
         
     }
 }

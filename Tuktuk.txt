@@ -1,6 +1,6 @@
-- Logger überarbeiten mit Dependency Injections
+ï»¿- Logger Ã¼berarbeiten mit Dependency Injections
 - Sticker Command
 - RightsRequest Command
 - Server Management
 - Windows Tool zur Serververwaltung
-- Server als .NET-Core -> damit wäre ein betrieb auf Linux möglich
+- Server als .NET-Core -> damit wÃ¤re ein betrieb auf Linux mÃ¶glich

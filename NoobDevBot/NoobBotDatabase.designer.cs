@@ -48,7 +48,7 @@ namespace NoobDevBot
     #endregion
 		
 		public NoobBotDatabaseDataContext() : 
-				base(global::NoobDevBot.Properties.Settings.Default.NoobBotDatabaseConnectionString1, mappingSource)
+				base(global::NoobDevBot.Properties.Settings.Default.NoobBotDatabaseConnectionString, mappingSource)
 		{
 			OnCreated();
 		}

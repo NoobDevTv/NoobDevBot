@@ -15,9 +15,13 @@ namespace NoobDevBot
 
         private static NoobBotDatabaseDataContext context;
 
-        public static void Initialize()
+        public static void Initialize(string connectionString)
         {
-            context = new NoobBotDatabaseDataContext();
+            if (string.IsNullOrWhiteSpace(connectionString))
+                context = new NoobBotDatabaseDataContext();
+            else
+                context = new NoobBotDatabaseDataContext(connectionString);
+
             GetNextStream();
         }
 

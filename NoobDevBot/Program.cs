@@ -8,6 +8,9 @@ using System.Threading;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using File = System.IO.File;
+using System.Data.Common;
+using Newtonsoft.Json;
+using System.Data.SqlClient;
 
 namespace NoobDevBot
 {
@@ -27,8 +30,20 @@ namespace NoobDevBot
                 Console.ReadKey();
                 return;
             }
+            string connectionString = "";
 
-            DatabaseManager.Initialize();
+            if (File.Exists("database.json"))
+            {
+                var dbInit = JsonConvert.DeserializeObject<DBSettings>(File.ReadAllText("database.json"));
+                var conBuilder = new SqlConnectionStringBuilder
+                {
+                    DataSource = dbInit.Server,
+                    InitialCatalog = dbInit.Database
+                };
+                connectionString = conBuilder.ToString();
+            }
+
+            DatabaseManager.Initialize(connectionString);
 
             using (var reader = new StreamReader("key.txt"))
                 Bot = new TelegramBotClient(reader.ReadLine());
@@ -38,12 +53,12 @@ namespace NoobDevBot
             Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(commandFromMessage(e.Message), e);
             Bot.OnInlineQuery += (s, e) => { };
             Bot.OnCallbackQuery += (s, e) => CommandManager.DispatchAsync("", e);
-            Bot.OnInlineResultChosen += (s, e) => {  };
-                        
+            Bot.OnInlineResultChosen += (s, e) => { };
+
             Bot.StartReceiving();
 
             are.WaitOne();
-            
+
             Logger.EndLog();
         }
 
