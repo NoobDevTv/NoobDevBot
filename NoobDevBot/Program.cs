@@ -32,13 +32,17 @@ namespace NoobDevBot
             }
             string connectionString = "";
 
-            if (File.Exists("database.json"))
+            if (File.Exists(@".\database.json"))
             {
                 var dbInit = JsonConvert.DeserializeObject<DBSettings>(File.ReadAllText("database.json"));
                 var conBuilder = new SqlConnectionStringBuilder
                 {
-                    DataSource = dbInit.Server,
-                    InitialCatalog = dbInit.Database
+                    DataSource = dbInit.Source,
+                    InitialCatalog = dbInit.Database,
+                    UserID = dbInit.User,
+                    Password = dbInit.Password,
+                    ConnectTimeout = dbInit.Timeout,
+                    Encrypt = true
                 };
                 connectionString = conBuilder.ToString();
             }

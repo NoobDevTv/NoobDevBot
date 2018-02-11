@@ -3,7 +3,7 @@
 
 # User-specific file
 *.jfm
-*.settings
+NoobDevBot/database.json
 
 # User-specific files
 *.suo
