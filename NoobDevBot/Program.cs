@@ -16,10 +16,10 @@ namespace NoobDevBot
 {
     class Program
     {
-
+        public static BotCommandManager manager;
         public static TelegramBotClient Bot;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             AutoResetEvent are = new AutoResetEvent(false);
             Logger.StartLog();
@@ -48,11 +48,11 @@ namespace NoobDevBot
             using (var reader = new StreamReader("key.txt"))
                 Bot = new TelegramBotClient(reader.ReadLine());
 
-            CommandManager.Initialize(Bot);
+            manager.Initialize(Bot);
 
-            Bot.OnMessage += (s, e) => CommandManager.DispatchAsync(commandFromMessage(e.Message), e);
+            Bot.OnMessage += (s, e) => manager.DispatchAsync(CommandFromMessage(e.Message), e);
             Bot.OnInlineQuery += (s, e) => { };
-            Bot.OnCallbackQuery += (s, e) => CommandManager.DispatchAsync("", e);
+            Bot.OnCallbackQuery += (s, e) => manager.DispatchAsync("", e);
             Bot.OnInlineResultChosen += (s, e) => { };
 
             Bot.StartReceiving();
@@ -62,7 +62,7 @@ namespace NoobDevBot
             Logger.EndLog();
         }
 
-        static string commandFromMessage(Message message)
+        private static string CommandFromMessage(Message message)
         {
             var command = message?.Text?.Split().FirstOrDefault(f => f.StartsWith("/"));
 

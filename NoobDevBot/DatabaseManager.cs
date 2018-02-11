@@ -29,9 +29,7 @@ namespace NoobDevBot
 
         public static user InsertUserIfNotExist(User user)
         {
-            user tmpUser;
-
-            if (!TryGetUser(user.Id, out tmpUser))
+            if (!TryGetUser(user.Id, out user tmpUser))
             {
                 SaveNewUser(user);
                 Submit();
@@ -60,14 +58,14 @@ namespace NoobDevBot
             var tempStream = new streams
             {
                 userId = user,
-                start = dateTime,
+                START = dateTime,
                 title = name
             };
 
             table.InsertOnSubmit(tempStream);
             Submit();
             GetNextStream();
-            return table.FirstOrDefault(s => s.userId == user && s.start == dateTime && s.title == name);
+            return table.FirstOrDefault(s => s.userId == user && s.START == dateTime && s.title == name);
         }
 
         internal static void InsertNewSmiley(string smiley)
@@ -101,7 +99,7 @@ namespace NoobDevBot
                 return;
             }
 
-            NextStream = table?.Where(s => s.start > DateTime.UtcNow)?.OrderBy(s => s.start)?.FirstOrDefault();
+            NextStream = table?.Where(s => s.START > DateTime.UtcNow)?.OrderBy(s => s.START)?.FirstOrDefault();
         }
 
         public static streams GetStreamById(int id)
@@ -139,7 +137,7 @@ namespace NoobDevBot
 
         public static byte? GetPower(string id, int reference, bool is_Group) =>
             context.GetTable<rights_relation>().FirstOrDefault(
-                r => r.is_group == is_Group && r.reference == reference && r.right_id == id)?.power;
+                r => r.is_group == is_Group && r.reference == reference && r.right_id == id)?.POWER;
 
         public static string GetSmiley(int id)
         {

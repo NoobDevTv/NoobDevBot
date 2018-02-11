@@ -22,8 +22,7 @@ namespace NoobDevBot
             if (!DatabaseManager.UserExists(user_id))
                 return false;
 
-            int needed_power;
-            if (!rights.TryGetValue(id, out needed_power))
+            if (!rights.TryGetValue(id, out int needed_power))
                 return false;
 
             byte power = DatabaseManager.GetPower(id, user_id, false) ?? 0;
