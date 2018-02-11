@@ -33,16 +33,15 @@ namespace NoobDevBot.Commands
                 return false;
             }
 
-            sendStreams(e);
+            SendStreams(e);
             NextFunction = AskUser;
             return true;
         }
         
         public bool DeleteTheStream(CallbackQueryEventArgs e)
         {
-            int tmpId;
-             
-            if (int.TryParse(e.CallbackQuery.Data, out tmpId))
+
+            if (int.TryParse(e.CallbackQuery.Data, out int tmpId))
             {
                 var stream = DatabaseManager.GetStreamById(tmpId);
                 if (DatabaseManager.DeleteStream(e.CallbackQuery.From.Id, tmpId))
@@ -61,7 +60,7 @@ namespace NoobDevBot.Commands
         
         private void AskUser(string text) => telegramBot.SendTextMessageAsync(id, text);
 
-        private void sendStreams(MessageEventArgs arg)
+        private void SendStreams(MessageEventArgs arg)
         {
             var mark = new InlineKeyboardMarkup();
 

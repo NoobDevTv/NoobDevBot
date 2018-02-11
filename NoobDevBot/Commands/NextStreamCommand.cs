@@ -30,7 +30,7 @@ namespace NoobDevBot.Commands
             string message;
 
             if (nextStream != null)
-                message = $"Der Nächste Stream ist: {nextStream.title} am {nextStream.start} von {nextStream.user.name}";
+                message = $"Der Nächste Stream ist: {nextStream.title} am {nextStream.START} von {nextStream.user.name}";
             else
                 message = "Leider konnte ich keinen Stream finden :(";
             

@@ -72,7 +72,7 @@ namespace NoobDevBot.Commands
         {
             if (DateTime.TryParse(e.Message.Text, out date))
             {
-                insertStream(e);
+                InsertStream(e);
                 NextFunction = null;
                 return true;
             }
@@ -80,7 +80,7 @@ namespace NoobDevBot.Commands
             return false;
         }
 
-        private void insertStream(MessageEventArgs e)
+        private void InsertStream(MessageEventArgs e)
         {
             var stream = DatabaseManager.InsertNewStream(userId, date, streamTitle);
 

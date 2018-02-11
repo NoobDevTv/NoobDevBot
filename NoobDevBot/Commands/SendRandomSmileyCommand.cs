@@ -16,10 +16,10 @@ namespace NoobDevBot.Commands
             this.telegramBot = telegramBot;
             this.id = id;
 
-            NextFunction = sendRandomSmiley;
+            NextFunction = SendRandomSmiley;
         }
 
-        private bool sendRandomSmiley(MessageEventArgs arg)
+        private bool SendRandomSmiley(MessageEventArgs arg)
         {
             var smiley = arg.Message.Text.Split().FirstOrDefault(a => a.StartsWith("@")).Substring(1);
 

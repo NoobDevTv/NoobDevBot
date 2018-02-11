@@ -19,13 +19,13 @@ namespace NoobDevBot.Commands
 
         public MyStreamsCommand(TelegramBotClient telegramBot, long chatId)
         {
-            NextFunction = getStreams;
+            NextFunction = GetStreams;
             telegramBotClient = telegramBot;
             id = chatId;
         }
 
 
-        private bool getStreams(MessageEventArgs arg)
+        private bool GetStreams(MessageEventArgs arg)
         {
             if (arg.Message.Chat.Type == ChatType.Group || arg.Message.Chat.Type == ChatType.Supergroup)
             {
@@ -50,12 +50,12 @@ namespace NoobDevBot.Commands
 
             telegramBotClient.SendTextMessageAsync(id, "Deine Streams:", replyMarkup: mark);
 
-            WaitForQuery(answer, id);
+            WaitForQuery(Answer, id);
 
             return true;
         }
 
-        private bool answer(CallbackQueryEventArgs args)
+        private bool Answer(CallbackQueryEventArgs args)
         {
             Console.WriteLine(args.CallbackQuery.Data);
             

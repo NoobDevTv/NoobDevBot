@@ -21,10 +21,10 @@ namespace NoobDevBot.Commands
             this.telegramBot = telegramBot;
             this.id = id;
 
-            NextFunction = getRandomSmiley;
+            NextFunction = GetRandomSmiley;
         }
 
-        private bool getRandomSmiley(MessageEventArgs arg)
+        private bool GetRandomSmiley(MessageEventArgs arg)
         {
             var gen = new Random();
 

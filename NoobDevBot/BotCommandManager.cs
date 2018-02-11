@@ -10,26 +10,26 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using System.Reflection;
+using CommandManagementSystem;
+using CommandManagementSystem.Attributes;
 
 namespace NoobDevBot
 {
-    public static class CommandManager
+    [CommandManager(nameof(BotCommandManager))]
+    public class BotCommandManager : CommandManager<string, MessageEventArgs, bool>
     {
-        private static CommandHandler<MessageEventArgs, bool> commandHandler;
-        private static TelegramBotClient telegramBot;
-        private static ConcurrentDictionary<long, Func<MessageEventArgs, bool>> commandDictionary;
-        private static ConcurrentDictionary<long, Func<CallbackQueryEventArgs, bool>> waitForInlineQuery;
+        private TelegramBotClient telegramBot;
+        private ConcurrentDictionary<long, Func<MessageEventArgs, bool>> commandDictionary;
+        private ConcurrentDictionary<long, Func<CallbackQueryEventArgs, bool>> waitForInlineQuery;
 
-        public static void Initialize(TelegramBotClient telegramBot)
+        public void Initialize(TelegramBotClient telegramBot)
         {
-            commandHandler = new CommandHandler<MessageEventArgs, bool>();
             commandDictionary = new ConcurrentDictionary<long, Func<MessageEventArgs, bool>>();
             waitForInlineQuery = new ConcurrentDictionary<long, Func<CallbackQueryEventArgs, bool>>();
 
             RightManager.Initialize();
-            CommandManager.telegramBot = telegramBot;
-
-
+            this.telegramBot = telegramBot;
+            
             var types = Assembly.GetExecutingAssembly().GetTypes();
 
             foreach (var item in types)
@@ -40,7 +40,7 @@ namespace NoobDevBot
                 if (command == null)
                     continue;
 
-                commandHandler[command.Name] += (e) => initializeCommand(item, e);
+                commandHandler[(string)command.Tag] += (e) => InitializeCommand(item, e);
 
                 if (rights != null)
                     foreach (var right in rights)
@@ -48,7 +48,7 @@ namespace NoobDevBot
             }
         }
 
-        public static bool Dispatch(string commandName, MessageEventArgs e)
+        public override bool Dispatch(string commandName, MessageEventArgs e)
         {
             if (commandName != null)
             {
@@ -62,57 +62,46 @@ namespace NoobDevBot
             }
             else
             {
-                Func<MessageEventArgs, bool> method;
 
-                if (commandDictionary.TryGetValue(e.Message.Chat.Id, out method))
+                if (commandDictionary.TryGetValue(e.Message.Chat.Id, out Func<MessageEventArgs, bool> method))
                     return method(e);
             }
 
             return false;
         }
-        public static bool Dispatch(string commandName, CallbackQueryEventArgs e)
+        public bool Dispatch(string commandName, CallbackQueryEventArgs e)
         {
-            Func<CallbackQueryEventArgs, bool> method;
-            if (waitForInlineQuery.TryRemove(e.CallbackQuery.From.Id, out method))
+            if (waitForInlineQuery.TryRemove(e.CallbackQuery.From.Id, out Func<CallbackQueryEventArgs, bool> method))
                 return method(e);
 
             return false;
         }
 
-        public static void DispatchAsync(string commandName, MessageEventArgs e) => Task.Run(() => Dispatch(commandName, e));
-        public static void DispatchAsync(string commandName, CallbackQueryEventArgs e) => Task.Run(() => Dispatch(commandName, e));
+        public override Task<bool> DispatchAsync(string commandName, MessageEventArgs e) => Task.Run(() => Dispatch(commandName, e));
+        public void DispatchAsync(string commandName, CallbackQueryEventArgs e) => Task.Run(() => Dispatch(commandName, e));
 
-        public static bool initializeCommand(Type commandType, MessageEventArgs e)
+        public override bool InitializeCommand(Type commandType, MessageEventArgs e)
         {
             var command = (ICommand<MessageEventArgs, bool>)Activator.CreateInstance(
                                            commandType, telegramBot, e.Message.Chat.Id);
 
-            command.FinishEvent += finishedCommand;
+            command.FinishEvent += FinishedCommand;
 
             commandDictionary.TryAdd(e.Message.Chat.Id, command.Dispatch);
 
             if (commandType.BaseType.GenericTypeArguments.Count() == 3)
             {
                 var tmp = (Command<MessageEventArgs, CallbackQueryEventArgs, bool>)command;
-                tmp.WaitForInlineQuery += tmp_WaitForInlineQuery;
-                
+                tmp.WaitForInlineQuery += TmpWaitForInlineQuery;
             }
 
             return command.Dispatch(e);
         }
 
-        private static void tmp_WaitForInlineQuery(object sender, Func<CallbackQueryEventArgs, bool> method)
-        {
-            var tmp = (long)sender;
-            waitForInlineQuery.TryAdd(tmp, method);
-        }
+        private void TmpWaitForInlineQuery(object sender, Func<CallbackQueryEventArgs, bool> method) 
+            => waitForInlineQuery.TryAdd((long)sender, method);
 
-        private static void finishedCommand(object sender, MessageEventArgs e)
-        {
-            Func<MessageEventArgs, bool> method;
-
-            commandDictionary.TryRemove(e.Message.Chat.Id, out method);
-
-        }
+        private void FinishedCommand(object sender, MessageEventArgs e) 
+            => commandDictionary.TryRemove(key: e.Message.Chat.Id, value: out Func<MessageEventArgs, bool> method);
     }
 }
