@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NoobBotDatabase" Class="NoobBotDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=HAL2015;Initial Catalog=NoobBotDatabase;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True" SettingsObjectName="NoobDevBot.Properties.Settings" SettingsPropertyName="NoobBotDatabaseConnectionString1" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=km-maindatabaseserver.database.windows.net;Initial Catalog=NoobBotDatabase;User ID=MainDbServer;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False" SettingsObjectName="NoobDevBot.Properties.Settings" SettingsPropertyName="NoobBotDatabaseConnectionString2" Provider="System.Data.SqlClient" />
   <Table Name="dbo.groups" Member="groups">
     <Type Name="groups">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -17,23 +17,24 @@
   </Table>
   <Table Name="dbo.rights_relation" Member="rights_relation">
     <Type Name="rights_relation">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="is_group" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="reference" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="right_id" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="power" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="POWER" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.smilies" Member="smilies">
     <Type Name="smilies">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="unicode" Type="System.String" DbType="NVarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="unicode" Type="System.String" DbType="VarChar(6) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.streams" Member="streams">
     <Type Name="streams">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="userId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="start" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="START" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="title" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="url" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Association Name="user_streams" Member="user" ThisKey="userId" OtherKey="id" Type="user" IsForeignKey="true" />

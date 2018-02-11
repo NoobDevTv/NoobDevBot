@@ -36,6 +36,9 @@ namespace NoobDevBot
     partial void Insertgroups_relation(groups_relation instance);
     partial void Updategroups_relation(groups_relation instance);
     partial void Deletegroups_relation(groups_relation instance);
+    partial void Insertrights_relation(rights_relation instance);
+    partial void Updaterights_relation(rights_relation instance);
+    partial void Deleterights_relation(rights_relation instance);
     partial void Insertsmilies(smilies instance);
     partial void Updatesmilies(smilies instance);
     partial void Deletesmilies(smilies instance);
@@ -48,7 +51,7 @@ namespace NoobDevBot
     #endregion
 		
 		public NoobBotDatabaseDataContext() : 
-				base(global::NoobDevBot.Properties.Settings.Default.NoobBotDatabaseConnectionString, mappingSource)
+				base(global::NoobDevBot.Properties.Settings.Default.NoobBotDatabaseConnectionString2, mappingSource)
 		{
 			OnCreated();
 		}
@@ -409,8 +412,12 @@ namespace NoobDevBot
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.rights_relation")]
-	public partial class rights_relation
+	public partial class rights_relation : INotifyPropertyChanging, INotifyPropertyChanged
 	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
 		
 		private bool _is_group;
 		
@@ -418,10 +425,47 @@ namespace NoobDevBot
 		
 		private string _right_id;
 		
-		private byte _power;
+		private byte _POWER;
+		
+    #region Definitionen der Erweiterungsmethoden
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void Onis_groupChanging(bool value);
+    partial void Onis_groupChanged();
+    partial void OnreferenceChanging(int value);
+    partial void OnreferenceChanged();
+    partial void Onright_idChanging(string value);
+    partial void Onright_idChanged();
+    partial void OnPOWERChanging(byte value);
+    partial void OnPOWERChanged();
+    #endregion
 		
 		public rights_relation()
 		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_is_group", DbType="Bit NOT NULL")]
@@ -435,7 +479,11 @@ namespace NoobDevBot
 			{
 				if ((this._is_group != value))
 				{
+					this.Onis_groupChanging(value);
+					this.SendPropertyChanging();
 					this._is_group = value;
+					this.SendPropertyChanged("is_group");
+					this.Onis_groupChanged();
 				}
 			}
 		}
@@ -451,7 +499,11 @@ namespace NoobDevBot
 			{
 				if ((this._reference != value))
 				{
+					this.OnreferenceChanging(value);
+					this.SendPropertyChanging();
 					this._reference = value;
+					this.SendPropertyChanged("reference");
+					this.OnreferenceChanged();
 				}
 			}
 		}
@@ -467,24 +519,52 @@ namespace NoobDevBot
 			{
 				if ((this._right_id != value))
 				{
+					this.Onright_idChanging(value);
+					this.SendPropertyChanging();
 					this._right_id = value;
+					this.SendPropertyChanged("right_id");
+					this.Onright_idChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_power", DbType="TinyInt NOT NULL")]
-		public byte power
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POWER", DbType="TinyInt NOT NULL")]
+		public byte POWER
 		{
 			get
 			{
-				return this._power;
+				return this._POWER;
 			}
 			set
 			{
-				if ((this._power != value))
+				if ((this._POWER != value))
 				{
-					this._power = value;
+					this.OnPOWERChanging(value);
+					this.SendPropertyChanging();
+					this._POWER = value;
+					this.SendPropertyChanged("POWER");
+					this.OnPOWERChanged();
 				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
@@ -534,7 +614,7 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_unicode", DbType="NVarChar(1) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_unicode", DbType="VarChar(6) NOT NULL", CanBeNull=false)]
 		public string unicode
 		{
 			get
@@ -585,7 +665,7 @@ namespace NoobDevBot
 		
 		private int _userId;
 		
-		private System.DateTime _start;
+		private System.DateTime _START;
 		
 		private string _title;
 		
@@ -601,8 +681,8 @@ namespace NoobDevBot
     partial void OnidChanged();
     partial void OnuserIdChanging(int value);
     partial void OnuserIdChanged();
-    partial void OnstartChanging(System.DateTime value);
-    partial void OnstartChanged();
+    partial void OnSTARTChanging(System.DateTime value);
+    partial void OnSTARTChanged();
     partial void OntitleChanging(string value);
     partial void OntitleChanged();
     partial void OnurlChanging(string value);
@@ -659,22 +739,22 @@ namespace NoobDevBot
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_start", DbType="DateTime NOT NULL")]
-		public System.DateTime start
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_START", DbType="DateTime NOT NULL")]
+		public System.DateTime START
 		{
 			get
 			{
-				return this._start;
+				return this._START;
 			}
 			set
 			{
-				if ((this._start != value))
+				if ((this._START != value))
 				{
-					this.OnstartChanging(value);
+					this.OnSTARTChanging(value);
 					this.SendPropertyChanging();
-					this._start = value;
-					this.SendPropertyChanged("start");
-					this.OnstartChanged();
+					this._START = value;
+					this.SendPropertyChanged("START");
+					this.OnSTARTChanged();
 				}
 			}
 		}
