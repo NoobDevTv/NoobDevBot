@@ -3,6 +3,7 @@
 
 # User-specific file
 *.jfm
+*.settings
 
 # User-specific files
 *.suo
